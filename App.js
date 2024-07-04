@@ -3,7 +3,10 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
 
 import { openDatabase, insertText, getLatestText } from './utils/testDatabase';
-import { BaseContainer } from './components/BaseContainer'; 
+import { BaseContainer } from './components/BaseContainer';
+import { BaseButton } from './components/BaseButton';
+import { BaseTextInputBox } from './components/BaseTextInputBox';
+import { BaseTextBox } from './components/BaseTextBox'
 
 export default function App() {
   const [textInput, setTextInput] = useState('');
@@ -47,15 +50,13 @@ export default function App() {
   return (
     <BaseContainer>
       <View style={styles.container}>
-        <TextInput
-          style={styles.input}
+        <BaseTextInputBox
           value={textInput}
           onChangeText={setTextInput}
-          placeholder="Enter text"
-          placeholderTextColor="#aaa"
+          placeholder="Enter event details"
         />
-        <Button title="Save Text" onPress={handleButtonPress} />
-        <Text style={styles.text}>Latest Text: {latestText}</Text>
+        <BaseButton title="Add Event" onPress={handleButtonPress} />
+        <BaseTextBox>Latest Text: {latestText}</BaseTextBox>
         <StatusBar style="auto" />
       </View>
     </BaseContainer>
