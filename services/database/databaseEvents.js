@@ -7,11 +7,12 @@ import { getDB, openDatabase } from "./database";
     await openDatabase();
 })();
 
-const db = getDB();
+let db = getDB();
 
 const ensureDBInitialized = async () => {
     if (!db) {
         await openDatabase();
+        db = getDB();
     }
 };
 
@@ -127,7 +128,7 @@ export const getAllEvents = async () => {
     await ensureDBInitialized();
     
     if (!db) {
-        return Promise.reject("Database is not initialized");
+        return Promise.reject("Database is not initialized"); 
     }
 
     try {

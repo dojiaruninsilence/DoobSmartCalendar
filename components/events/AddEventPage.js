@@ -8,8 +8,6 @@ import { BaseTextInputBox } from '../BaseTextInputBox';
 import { addEvent } from '../../services/database/databaseEvents';
 
 export const AddEventPage = ({ navigation }) => {
-    console.log('Navigation prop:', navigation);
-
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [notes, setNotes] = useState('');
