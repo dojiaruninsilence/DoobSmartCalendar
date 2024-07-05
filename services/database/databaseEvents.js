@@ -9,6 +9,12 @@ import { getDB, openDatabase } from "./database";
 
 const db = getDB();
 
+const ensureDBInitialized = async () => {
+    if (!db) {
+        await openDatabase();
+    }
+};
+
 const isLeapyear = (year) => {
     return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
 };
@@ -21,6 +27,8 @@ const isValidDate = (year, month, day) => {
 
 // create
 export const addEvent = async (event) => {
+    await ensureDBInitialized();
+
     const {
         title, description, notes, start_time_hour, start_time_minute,
         start_date_month, start_date_day, start_date_year,
@@ -101,6 +109,8 @@ export const addEvent = async (event) => {
 
 // read
 export const getEventById = async (id) => {
+    await ensureDBInitialized();
+
     if (!db) {
         return Promise.reject("Database is not initialized");
     }
@@ -114,6 +124,8 @@ export const getEventById = async (id) => {
 };
 
 export const getAllEvents = async () => {
+    await ensureDBInitialized();
+    
     if (!db) {
         return Promise.reject("Database is not initialized");
     }
@@ -128,6 +140,8 @@ export const getAllEvents = async () => {
 
 // update
 export const updateEvent = async (id, updatedEvent) => {
+    await ensureDBInitialized();
+
     const {
         title, description, notes, start_time_hour, start_time_minute,
         start_date_month, start_date_day, start_date_year,
@@ -204,6 +218,8 @@ export const updateEvent = async (id, updatedEvent) => {
 
 // Delete
 export const deleteEvent = async (id) => {
+    await ensureDBInitialized();
+
     if (!db) {
         return Promise.reject("Database is not initialized");
     }

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, Alert, ScrollView, Switch, StyleSheet } from 'react-native';
 
-import { BaseButton } from './BaseButton';
-import { BaseContainer } from './BaseContainer';
-import { BaseTextBox } from './BaseTextBox';
-import { BaseTextInputBox } from './BaseTextInputBox';
-import { addEvent } from '../services/database/databaseEvents';
+import { BaseButton } from '../BaseButton';
+import { BaseContainer } from '../BaseContainer';
+import { BaseTextBox } from '../BaseTextBox';
+import { BaseTextInputBox } from '../BaseTextInputBox';
+import { addEvent } from '../../services/database/databaseEvents';
 
-export const AddEventPage = () => {
+export const AddEventPage = ({ navigation }) => {
+    console.log('Navigation prop:', navigation);
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [notes, setNotes] = useState('');
@@ -232,6 +234,10 @@ export const AddEventPage = () => {
                     <BaseTextInputBox value={mainEvent} onChangeText={setMainEvent} placeholder="Main Event Title" />
                 )}
                 <BaseButton title="Add Event" onPress={handleAddEvent} />
+                <BaseButton title="View Events" onPress={() => {
+                    console.log('Button Pressed');
+                    navigation.navigate('ViewEvents');
+                }} />
             </ScrollView>
         </BaseContainer>
     );
