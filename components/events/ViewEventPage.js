@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
+
 import { getAllEvents } from "../../services/database/databaseEvents";
 import { BaseButton } from "react-native-gesture-handler";
 import { BaseContainer } from "../BaseContainer";
@@ -10,7 +11,7 @@ const formatDateTime = (year, month, day, hour, minute) => {
     ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
 };
 
-export const ViewEventsPage = () => {
+export const ViewEventsPage = ({ navigation }) => {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
@@ -35,9 +36,10 @@ export const ViewEventsPage = () => {
                     item.start_time_hour, item.start_time_minute
                 )}
             </Text>
-            <BaseButton title="Add Event" onPress={() => {
-                navigation.navigate('AddEvent');
-            }} />
+            <Button
+                title="View Details"
+                onPress={() => navigation.navigate('ViewEventDetail', { eventId: item.id })}
+            />
         </View>
     );
 
