@@ -12,6 +12,7 @@ import { BaseTextBox } from './components/BaseTextBox'
 import { AddEventPage } from './components/events/AddEventPage';
 import { ViewEventsPage } from './components/events/ViewEventPage';
 import { ViewEventDetailPage } from './components/events/ViewEventDetailPage';
+import { EditEventDetailPage } from './components/events/EditEventDetailPage';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="AddEvent">
           <Stack.Screen name="AddEvent" component={AddEventPage} />
           <Stack.Screen name="ViewEventDetail" component={ViewEventDetailPage} />
+          <Stack.Screen name="EditEventDetail" component={EditEventDetailPage} />
           <Stack.Screen name="ViewEvents" component={ViewEventsPage} />
           {/* Add other screens here */}
         </Stack.Navigator>

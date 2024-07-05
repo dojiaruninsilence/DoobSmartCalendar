@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 
-import { getEventById } from '../../services/database/databaseEvents';
+import { getEventById, deleteEvent } from '../../services/database/databaseEvents';
 import { BaseButton } from '../BaseButton';
 import { BaseContainer } from '../BaseContainer';
 import { BaseTextBox } from '../BaseTextBox';
 
-export const ViewEventDetailPage = ({ route }) => {
+export const ViewEventDetailPage = ({ route, navigation }) => {
     const { eventId } = route.params;
     const [event, setEvent] = useState(null);
+
+    const handleDeleteEvent = async () => {
+        try {
+            await deleteEvent(eventId);
+            Alert.alert("Success", "Event deleted successfully");
+            navigation.navigate('ViewEvents');
+        } catch (error) {
+            Alert.alert("Error", 'failed to delete event: ${error}');
+        }
+    }
 
     useEffect(() => {
         const fetchEvent = async () => {
@@ -42,6 +52,11 @@ export const ViewEventDetailPage = ({ route }) => {
             <Text style={styles.detailText}>Importance: {event.importance}</Text>
             <Text style={styles.detailText}>Repeating: {event.is_repeating ? 'Yes' : 'No'}</Text>
             <Text style={styles.detailText}>Main Event: {event.is_main_event ? 'Yes' : 'No'}</Text>
+            <Button
+                title="Edit Event"
+                onPress={() => navigation.navigate('EditEventDetail', { eventId: event.id })}
+            />
+            <Button title="Delete Event" onPress={handleDeleteEvent} />
         </BaseContainer>
     );
 };
