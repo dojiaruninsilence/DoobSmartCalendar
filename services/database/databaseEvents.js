@@ -1,6 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 
 import { getDB, openDatabase } from "./database";
+import { modifyDateTime, formatDateTime, separateDateTime, calculateDifference } from '../../utils/dateTimeCalculations';
 
 // ensure that the database is opened and initialized
 (async () => {
@@ -68,9 +69,8 @@ const validateAndDefaultEvent = (event) => {
         }
     }
 
-    if (event.en)
-
-    // Apply defaults for missing or invalid fields
+    
+    // apply defaults for missing or invalid fields - start time and date
     event.start_time_hour = (event.start_time_hour >= 0 && event.start_time_hour <= 23) ? event.start_time_hour : currentHour;
     event.start_time_minute = (event.start_time_minute >= 0 && event.start_time_minute <= 59) ? event.start_time_minute : currentMinute;
 
@@ -78,6 +78,34 @@ const validateAndDefaultEvent = (event) => {
     event.start_date_day = (event.start_date_day >= 1 && event.start_date_day <= 31) ? event.start_date_day : currentDay;
     event.start_date_year = (event.start_date_year >= 1900 && event.start_date_year <= 2100) ? event.start_date_year : currentYear;
 
+    // apply defaults for missing or invalid fields - duration
+    event.duration_days = (event.duration_days >= 0 && event.duration_days <= 999) ? event.duration_days : 0;
+    event.duration_hours = (event.duration_hours >= 0 && event.duration_hours <= 23) ? event.duration_hours : 0;
+    event.duration_minutes = (event.duration_minutes >= 0 && event.duration_minutes <= 59) ? event.duration_minutes : 0;
+
+    // additional checks for end date and time and duration
+    const endTimeFieldsEmpty = (event.end_time_hour === undefined && event.end_time_minute === undefined) ||
+        (isNaN(event.end_time_hour) && isNaN(event.end_time_minute));
+    const endDateFieldsEmpty = (event.end_date_month === undefined && event.end_date_day === undefined && event.end_date_year === undefined) ||
+        (isNaN(event.end_date_month) && isNaN(event.end_date_day) && isNaN(event.end_date_year));
+    const durationFieldsFilled = event.duration_days !== 0 || event.duration_hours !== 0 || event.duration_minutes !== 0;
+
+    // calculate end date and time if empty and duration provided
+    if (endTimeFieldsEmpty && endDateFieldsEmpty && durationFieldsFilled) {
+        const startDateTime = formatDateTime(
+            event.start_date_month, event.start_date_day, event.start_date_year, event.start_time_hour, event.start_time_minute);
+
+        const endDateTime = modifyDateTime(startDateTime, event.duration_days, event.duration_hours, event.duration_minutes);
+        const { month, day, year, hours, minutes } = separateDateTime(endDateTime);
+
+        event.end_date_month = month;
+        event.end_date_day = day;
+        event.end_date_year = year;
+        event.end_time_hour = hours;
+        event.end_time_minute = minutes;
+    }
+
+    // apply defaults for missing or invalid fields - end time
     event.end_time_hour = (event.end_time_hour >= 0 && event.end_time_hour <= 23) ? event.end_time_hour : event.start_time_hour;
     event.end_time_minute = (event.end_time_minute >= 0 && event.end_time_minute <= 59) ? event.end_time_minute : event.start_time_minute;
 
@@ -85,16 +113,25 @@ const validateAndDefaultEvent = (event) => {
     event.end_date_day = (event.end_date_day >= 1 && event.end_date_day <= 31) ? event.end_date_day : event.start_date_day;
     event.end_date_year = (event.end_date_year >= 1900 && event.end_date_year <= 2100) ? event.end_date_year : event.start_date_year;
 
-    event.deadline_time_hour = (event.deadline_time_hour >= 0 && event.deadline_time_hour <= 23) ? event.deadline_time_hour : event.start_time_hour;
-    event.deadline_time_minute = (event.deadline_time_minute >= 0 && event.deadline_time_minute <= 59) ? event.deadline_time_minute : event.start_time_minute;
+    // calculate the duration if an end date or time was provided
+    if (!endTimeFieldsEmpty || !endDateFieldsEmpty) {
+        const startDateTime = formatDateTime(event.start_date_month, event.start_date_day, event.start_date_year, event.start_time_hour, event.start_time_minute);
+        const endDateTime = formatDateTime(event.end_date_month, event.end_date_day, event.end_date_year, event.end_time_hour, event.end_time_minute);
 
-    event.deadline_date_month = (event.deadline_date_month >= 1 && event.deadline_date_month <= 12) ? event.deadline_date_month : event.start_date_month;
-    event.deadline_date_day = (event.deadline_date_day >= 1 && event.deadline_date_day <= 31) ? event.deadline_date_day : event.start_date_day;
-    event.deadline_date_year = (event.deadline_date_year >= 1900 && event.deadline_date_year <= 2100) ? event.deadline_date_year : event.start_date_year;
+        const { days, hours, minutes } = calculateDifference(startDateTime, endDateTime);
 
-    event.duration_days = (event.duration_days >= 0 && event.duration_days <= 999) ? event.duration_days : 0;
-    event.duration_hours = (event.duration_hours >= 0 && event.duration_hours <= 23) ? event.duration_hours : 0;
-    event.duration_minutes = (event.duration_minutes >= 0 && event.duration_minutes <= 59) ? event.duration_minutes : 0;
+        event.duration_days = days;
+        event.duration_hours = hours;
+        event.duration_minutes = minutes;
+    }
+
+    // apply defaults for missing or invalid fields - deadline
+    event.deadline_time_hour = (event.deadline_time_hour >= 0 && event.deadline_time_hour <= 23) ? event.deadline_time_hour : event.end_time_hour;
+    event.deadline_time_minute = (event.deadline_time_minute >= 0 && event.deadline_time_minute <= 59) ? event.deadline_time_minute : event.end_time_minute;
+
+    event.deadline_date_month = (event.deadline_date_month >= 1 && event.deadline_date_month <= 12) ? event.deadline_date_month : event.end_date_month;
+    event.deadline_date_day = (event.deadline_date_day >= 1 && event.deadline_date_day <= 31) ? event.deadline_date_day : event.end_date_day;
+    event.deadline_date_year = (event.deadline_date_year >= 1900 && event.deadline_date_year <= 2100) ? event.deadline_date_year : event.end_date_year;
 
     event.importance = (event.importance >= 1 && event.importance <= 10) ? event.importance : 1;
 
