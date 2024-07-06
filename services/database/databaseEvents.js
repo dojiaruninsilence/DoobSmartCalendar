@@ -34,6 +34,42 @@ const validateAndDefaultEvent = (event) => {
     const currentDay = now.getDate();
     const currentYear = now.getFullYear();
 
+    // check for incomplete time groupings
+    const timeGroups = [
+        { hour: event.start_time_hour, minute: event.start_time_minute },
+        { hour: event.end_time_hour, minute: event.end_time_minute },
+        { hour: event.deadline_time_hour, minute: event.deadline_time_minute }
+    ];
+
+    for (const group of timeGroups) {
+        const { hour, minute } = group;
+        if ((hour !== undefined && minute === undefined) || (hour === undefined && minute !== undefined) ||
+            (!isNaN(hour) && isNaN(minute)) || (isNaN(hour) && !isNaN(minute))) {
+            alert("Please provide both hour and minute for any time fields.");
+            return null;
+        }
+    }
+
+    // check for incomplete date groupings
+    const dateGroups = [
+        { year: event.start_date_year, month: event.start_date_month, day: event.start_date_day },
+        { year: event.end_date_year, month: event.end_date_month, day: event.end_date_day },
+        { year: event.deadline_date_year, month: event.deadline_date_month, day: event.deadline_date_day }
+    ];
+
+    for (const group of dateGroups) {
+        const { year, month, day } = group;
+        if ((year !== undefined && (month === undefined || day === undefined)) ||
+            (year === undefined && (month !== undefined || day !== undefined)) ||
+            (isNaN(year) && (!isNaN(month) || !isNaN(day))) ||
+            (!isNaN(year) && (isNaN(month) || isNaN(day)))) {
+            alert("Please provide year, month, and day for any date fields");
+            return null;
+        }
+    }
+
+    if (event.en)
+
     // Apply defaults for missing or invalid fields
     event.start_time_hour = (event.start_time_hour >= 0 && event.start_time_hour <= 23) ? event.start_time_hour : currentHour;
     event.start_time_minute = (event.start_time_minute >= 0 && event.start_time_minute <= 59) ? event.start_time_minute : currentMinute;
@@ -59,7 +95,7 @@ const validateAndDefaultEvent = (event) => {
     event.duration_days = (event.duration_days >= 0 && event.duration_days <= 999) ? event.duration_days : 0;
     event.duration_hours = (event.duration_hours >= 0 && event.duration_hours <= 23) ? event.duration_hours : 0;
     event.duration_minutes = (event.duration_minutes >= 0 && event.duration_minutes <= 59) ? event.duration_minutes : 0;
-    
+
     event.importance = (event.importance >= 1 && event.importance <= 10) ? event.importance : 1;
 
     return event;
@@ -82,35 +118,9 @@ export const addEvent = async (event) => {
 
     event = validateAndDefaultEvent(event)
 
-    // // validate the dates
-    // if (!isValidDate(start_date_year, start_date_month, start_date_day)) {
-    //     return Promise.reject("Invalid event start date");
-    // }
-    // if (!isValidDate(end_date_year, end_date_month, end_date_day)) {
-    //     return Promise.reject("Invalid event end date");
-    // }
-    // if (!isValidDate(deadline_date_year, deadline_date_month, deadline_date_day)) {
-    //     return Promise.reject("Invalid event deadline date");
-    // }
-
-    // // validate the times 
-    // if (start_time_hour < 0 || start_time_hour > 23 ||
-    //     start_time_minute < 0 || start_time_minute > 59) {
-    //     return Promise.reject("Invalid start time");
-    // }
-    // if (end_time_hour < 0 || end_time_hour > 23 ||
-    //     end_time_minute < 0 || end_time_minute > 59) {
-    //     return Promise.reject("Invalid end time");
-    // }
-    // if (deadline_time_hour < 0 || deadline_time_hour > 23 ||
-    //     deadline_time_minute < 0 || deadline_time_minute > 59) {
-    //     return Promise.reject("Invalid deadline time");
-    // }
-
-    // // validate importance
-    // if (importance < 1 || importance > 10) {
-    //     return Promise.reject("Importance must be between 1 and 5");
-    // }
+    if (!event) {
+        return Promise.reject("Invalid event data");
+    }
 
     if (!db) {
         return Promise.reject("Database is not initialized: addEvent");
@@ -195,37 +205,11 @@ export const updateEvent = async (id, updatedEvent) => {
         main_event
     } = updatedEvent;
 
-    updatedEvent = validateAndDefaultEvent(updatedEvent)
+    updatedEvent = validateAndDefaultEvent(updatedEvent);
 
-    // // Validate the dates
-    // if (!isValidDate(start_date_year, start_date_month, start_date_day)) {
-    //     return Promise.reject("Invalid event start date");
-    // }
-    // if (!isValidDate(end_date_year, end_date_month, end_date_day)) {
-    //     return Promise.reject("Invalid event end date");
-    // }
-    // if (!isValidDate(deadline_date_year, deadline_date_month, deadline_date_day)) {
-    //     return Promise.reject("Invalid event deadline date");
-    // }
-
-    // // Validate the times 
-    // if (start_time_hour < 0 || start_time_hour > 23 ||
-    //     start_time_minute < 0 || start_time_minute > 59) {
-    //     return Promise.reject("Invalid start time");
-    // }
-    // if (end_time_hour < 0 || end_time_hour > 23 ||
-    //     end_time_minute < 0 || end_time_minute > 59) {
-    //     return Promise.reject("Invalid end time");
-    // }
-    // if (deadline_time_hour < 0 || deadline_time_hour > 23 ||
-    //     deadline_time_minute < 0 || deadline_time_minute > 59) {
-    //     return Promise.reject("Invalid deadline time");
-    // }
-
-    // // Validate importance
-    // if (importance < 1 || importance > 10) {
-    //     return Promise.reject("Importance must be between 1 and 10");
-    // }
+    if (!updatedEvent) {
+        return Promise.reject("Invalid event data");
+    }
 
     if (!db) {
         return Promise.reject("Database is not initialized");
