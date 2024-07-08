@@ -8,6 +8,7 @@ import { AddEventPage } from '../events/AddEventPage';
 import { EditEventDetailPage } from '../events/EditEventDetailPage';
 import { ViewEventsPage } from '../events/ViewEventPage';
 import { ViewEventDetailPage } from '../events/ViewEventDetailPage';
+import { CalendarViewPage } from '../calendar/CalendarViewPage';
 import { CustomDrawerContent } from './CustomDrawerContent';
 
 const Stack = createStackNavigator();
@@ -20,6 +21,7 @@ const HomeStack = () => (
         <Stack.Screen name="ViewEvents" component={ViewEventsPage} />
         <Stack.Screen name="ViewEventDetail" component={ViewEventDetailPage} />
         <Stack.Screen name="EditEventDetail" component={EditEventDetailPage} />
+        <Stack.Screen name="CalendarView" component={CalendarViewPage} />
     </Stack.Navigator>
 );
 

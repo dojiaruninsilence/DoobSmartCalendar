@@ -7,6 +7,7 @@ export const HomePage = ({ navigation }) => {
         <View style={styles.container}>
             <MenuItem title="Add Event" onPress={() => navigation.navigate('AddEvent')} />
             <MenuItem title="View Events" onPress={() => navigation.navigate('ViewEvents')} />
+            <MenuItem title="Calendar View" onPress={() => navigation.navigate('CalendarView')} />
         </View>
     )
 };

@@ -20,6 +20,10 @@ export const CustomDrawerContent = (props) => {
                 label="View Events"
                 onPress={() => props.navigation.navigate('ViewEvents')}
             />
+            <DrawerItem
+                label="Calendar View"
+                onPress={() => props.navigation.navigate('CalendarView')}
+            />
             {/* Add more drawer items as needed */}
         </DrawerContentScrollView>
     );
