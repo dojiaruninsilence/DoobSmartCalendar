@@ -149,8 +149,10 @@ export const addEvent = async (event) => {
         end_date_year, duration_days, duration_hours, duration_minutes,
         importance, deadline_time_hour, deadline_time_minute,
         deadline_date_month, deadline_date_day, deadline_date_year,
-        is_repeating, number_repeats, is_main_event, is_sub_event,
-        main_event
+        repeat_flags, number_repeats, repeat_end_date_month, 
+        repeat_end_date_day, repeat_end_date_year, repeat_start_time_hour,
+        repeat_start_time_minute, repeat_end_time_hour, 
+        repeat_end_time_minute, is_main_event, is_sub_event, main_event
     } = event;
 
     event = validateAndDefaultEvent(event)
@@ -173,12 +175,15 @@ export const addEvent = async (event) => {
                     end_date_year, duration_days, duration_hours, duration_minutes,
                     importance, deadline_time_hour, deadline_time_minute,
                     deadline_date_month, deadline_date_day, deadline_date_year,
-                    is_repeating, number_repeats, is_main_event, is_sub_event,
-                    main_event, created_at, updated_at
+                    repeat_flags, number_repeats, repeat_end_date_month, 
+                    repeat_end_date_day, repeat_end_date_year, repeat_start_time_hour,
+                    repeat_start_time_minute, repeat_end_time_hour, 
+                    repeat_end_time_minute, is_main_event, is_sub_event, main_event,
+                    created_at, updated_at
                 )
                 VALUES (
                     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now')
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now')
                 )
             `, [
                 event.title, event.description, event.notes, event.start_time_hour, event.start_time_minute,
@@ -187,8 +192,10 @@ export const addEvent = async (event) => {
                 event.end_date_year, event.duration_days, event.duration_hours, event.duration_minutes,
                 event.importance, event.deadline_time_hour, event.deadline_time_minute,
                 event.deadline_date_month, event.deadline_date_day, event.deadline_date_year,
-                event.is_repeating, event.number_repeats, event.is_main_event, event.is_sub_event,
-                event.main_event
+                event.repeat_flags, event.number_repeats, event.repeat_end_date_month, 
+                event.repeat_end_date_day, event.repeat_end_date_year, event.repeat_start_time_hour,
+                event.repeat_start_time_minute, event.repeat_end_time_hour, event.repeat_end_time_minute,
+                event.is_main_event, event.is_sub_event, event.main_event
             ]
         );
     } catch (error) {
@@ -238,8 +245,10 @@ export const updateEvent = async (id, updatedEvent) => {
         end_date_year, duration_days, duration_hours, duration_minutes,
         importance, deadline_time_hour, deadline_time_minute,
         deadline_date_month, deadline_date_day, deadline_date_year,
-        is_repeating, number_repeats, is_main_event, is_sub_event,
-        main_event
+        repeat_flags, number_repeats, repeat_end_date_month, 
+        repeat_end_date_day, repeat_end_date_year, repeat_start_time_hour,
+        repeat_start_time_minute, repeat_end_time_hour, 
+        repeat_end_time_minute, is_main_event, is_sub_event, main_event
     } = updatedEvent;
 
     updatedEvent = validateAndDefaultEvent(updatedEvent);
@@ -262,18 +271,24 @@ export const updateEvent = async (id, updatedEvent) => {
                     end_date_year = ?, duration_days = ?, duration_hours = ?, duration_minutes = ?,
                     importance = ?, deadline_time_hour = ?, deadline_time_minute = ?,
                     deadline_date_month = ?, deadline_date_day = ?, deadline_date_year = ?,
-                    is_repeating = ?, number_repeats = ?, is_main_event = ?, is_sub_event = ?,
+                    repeat_flags = ?, number_repeats = ?, repeat_end_date_month = ?, 
+                    repeat_end_date_day = ?, repeat_end_date_year = ?, repeat_start_time_hour = ?,
+                    repeat_start_time_minute = ?, repeat_end_time_hour = ?, 
+                    repeat_end_time_minute = ?, is_main_event = ?, is_sub_event = ?,
                     main_event = ?, updated_at = datetime('now')
                 WHERE id = ?
             `, [
-                updatedEvent.title, updatedEvent.description, updatedEvent.notes, updatedEvent.start_time_hour, updatedEvent.start_time_minute,
-                updatedEvent.start_date_month, updatedEvent.start_date_day, updatedEvent.start_date_year,
-                updatedEvent.end_time_hour, updatedEvent.end_time_minute, updatedEvent.end_date_month, updatedEvent.end_date_day,
-                updatedEvent.end_date_year, updatedEvent.duration_days, updatedEvent.duration_hours, updatedEvent.duration_minutes,
+                updatedEvent.title, updatedEvent.description, updatedEvent.notes, updatedEvent.start_time_hour,
+                updatedEvent.start_time_minute, updatedEvent.start_date_month, updatedEvent.start_date_day,
+                updatedEvent.start_date_year, updatedEvent.end_time_hour, updatedEvent.end_time_minute,
+                updatedEvent.end_date_month, updatedEvent.end_date_day, updatedEvent.end_date_year,
+                updatedEvent.duration_days, updatedEvent.duration_hours, updatedEvent.duration_minutes,
                 updatedEvent.importance, updatedEvent.deadline_time_hour, updatedEvent.deadline_time_minute,
                 updatedEvent.deadline_date_month, updatedEvent.deadline_date_day, updatedEvent.deadline_date_year,
-                updatedEvent.is_repeating, updatedEvent.number_repeats, updatedEvent.is_main_event, updatedEvent.is_sub_event,
-                updatedEvent.main_event, id
+                updatedEvent.repeat_flags, updatedEvent.number_repeats, updatedEvent.repeat_end_date_month, 
+                updatedEvent.repeat_end_date_day, updatedEvent.repeat_end_date_year, updatedEvent.repeat_start_time_hour,
+                updatedEvent.repeat_start_time_minute, updatedEvent.repeat_end_time_hour, updatedEvent.repeat_end_time_minute,
+                updatedEvent.is_main_event, updatedEvent.is_sub_event, updatedEvent.main_event, id
         ]);
         return result.changes;
     } catch (error) {

@@ -1,6 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 
-const database_name = "doob_calendar.db";
+const database_name = "doob_calendar_v_1.db";
 let db;
 
 export const openDatabase = async () => {
@@ -35,8 +35,15 @@ export const openDatabase = async () => {
                 deadline_date_month INTEGER CHECK (deadline_date_month >= 1 AND deadline_date_month <= 12),
                 deadline_date_day INTEGER CHECK (deadline_date_day >= 1 AND deadline_date_day <= 31),
                 deadline_date_year INTEGER CHECK (deadline_date_year >= 1776 AND deadline_date_year <= 9999),
-                is_repeating BOOLEAN,
+                repeat_flags INTEGER,
                 number_repeats INTEGER,
+                repeat_end_date_month INTEGER CHECK (end_date_month >= 1 AND end_date_month <= 12),
+                repeat_end_date_day INTEGER CHECK (end_date_day >= 1 AND end_date_day <= 31),
+                repeat_end_date_year INTEGER CHECK (end_date_year >= 1776 AND end_date_year <= 9999),
+                repeat_start_time_hour INTEGER CHECK (end_time_hour >= 0 AND end_time_hour <= 23),
+                repeat_start_time_minute INTEGER CHECK (end_time_minute >= 0 AND end_time_minute <= 59),
+                repeat_end_time_hour INTEGER CHECK (end_time_hour >= 0 AND end_time_hour <= 23),
+                repeat_end_time_minute INTEGER CHECK (end_time_minute >= 0 AND end_time_minute <= 59),
                 is_main_event BOOLEAN,
                 is_sub_event BOOLEAN,
                 main_event TEXT,
