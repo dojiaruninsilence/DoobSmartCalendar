@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import moment from "moment";
 
@@ -14,6 +14,10 @@ export const CalendarViewPage = () => {
                 setCurrentDate(prevDate => {
                     if (zoomLevel === 'week') {
                         return new Date(prevDate.setDate(prevDate.getDate() + 7));
+                    } else if (zoomLevel === 'month') {
+                        return new Date(prevDate.setMonth(prevDate.getMonth() + 1));
+                    } else if (zoomLevel === 'year') {
+                        return new Date(prevDate.setFullYear(prevDate.getFullYear() + 1));
                     } else {
                         return new Date(prevDate.setDate(prevDate.getDate() + 1));
                     }
@@ -23,6 +27,10 @@ export const CalendarViewPage = () => {
                 setCurrentDate(prevDate => {
                     if (zoomLevel === 'week') {
                         return new Date(prevDate.setDate(prevDate.getDate() - 7));
+                    } else if (zoomLevel === 'month') {
+                        return new Date(prevDate.setMonth(prevDate.getMonth() - 1));
+                    } else if (zoomLevel === 'year') {
+                        return new Date(prevDate.setFullYear(prevDate.getFullYear() - 1));
                     } else {
                         return new Date(prevDate.setDate(prevDate.getDate() - 1));
                     }
@@ -96,9 +104,71 @@ export const CalendarViewPage = () => {
                     </View>
                 );
             case 'month':
-                return <Text>Month View</Text>
+                const startOfMonth = moment(currentDate).startOf('month');
+                const startDayOfMonth = startOfMonth.day();
+                const daysInMonth = startOfMonth.daysInMonth();
+                const days = Array.from({ length: daysInMonth }, (_, i) =>
+                    startOfMonth.clone().add(i, 'days')
+                );
+                const weeks = [];
+
+                for (let i = 0; i < startDayOfMonth; i++) {
+                    days.unshift(null);
+                }
+
+                while (days.length) {
+                    weeks.push(days.splice(0, 7));
+                }
+
+                return (
+                    <View style={styles.monthContainer}>
+                        <Text style={styles.monthYearText}>{startOfMonth.format('MMMM YYYY')}</Text>
+                        {weeks.map((week, weekIndex) => (
+                            <View key={weekIndex} style={styles.weekRow}>
+                                {week.map((day, dayIndex) => {
+                                    if (day) {
+                                        const dateFormatted = day.format('DD');
+                                        const isToday = day.isSame(currentDate, 'day');
+                                        return (
+                                            <TouchableOpacity
+                                                key={dayIndex}
+                                                style={[styles.dayBox, isToday && styles.highlightedBox]}
+                                                onPress={() => handleDayClick(day.toDate())}
+                                            >
+                                                <Text style={styles.dayDateText}>{dateFormatted}</Text>
+                                            </TouchableOpacity>
+                                        );
+                                    } else {
+                                        return <View key={dayIndex} style={styles.emptyBox} />;
+                                    }
+                                })}
+                            </View>
+                        ))}
+                    </View>
+                )
             case 'year':
-                return <Text>Year View</Text>
+                const months = moment.months();
+                const currentMonth = moment(currentDate).month();
+
+                return (
+                    <View style={styles.yearContainer}>
+                        <Text style={styles.yearText}>{moment(currentDate).format('YYYY')}</Text>
+                        <ScrollView>
+                        {months.map((month, index) => {
+                            const isCurrentMonth = index === currentMonth;
+                            return (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={[styles.monthBox, isCurrentMonth && styles.highlightedBox]}
+                                    onPress={() => handleDayClick(moment(currentDate).month(index).toDate())}
+                                >
+                                    <Text style={styles.monthText}>{month}</Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                        </ScrollView>
+                    </View>
+                );
             default:
                 return <Text>Day View</Text>
         }
@@ -161,7 +231,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 2,
     },
     centerBox: {
-        backgroundColor: '#e0e0e0',
+        backgroundColor: '#e0e0e0', // Highlight the center box
     },
     weekContainer: {
         width: '90%',
@@ -176,15 +246,7 @@ const styles = StyleSheet.create({
         marginVertical: 2,
     },
     highlightedBox: {
-        backgroundColor: '#e0e0e0',
-    },
-    dateText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    smallDateText: {
-        fontSize: 14,
-        fontWeight: 'bold',
+        backgroundColor: '#e0e0e0', // Highlight the current date box
     },
     weekDayText: {
         fontSize: 16,
@@ -192,5 +254,38 @@ const styles = StyleSheet.create({
     },
     weekDateText: {
         fontSize: 14,
+    },
+    monthContainer: {
+        width: '100%',
+        height: '80%',
+    },
+    monthYearText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 8,
+    },
+    weekRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    dayBox: {
+        flex: 1,
+        borderColor: '#000',
+        borderWidth: 2,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        margin: 2,
+        padding: 4,
+    },
+    dayDateText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    emptyBox: {
+        flex: 1,
+        borderColor: '#000',
+        borderWidth: 2,
+        margin: 2,
     },
 });
