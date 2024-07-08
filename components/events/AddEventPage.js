@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Alert, ScrollView, Switch, StyleSheet } from 'react-native';
 
-import { BaseButton } from '../BaseButton';
-import { BaseContainer } from '../BaseContainer';
-import { BaseTextBox } from '../BaseTextBox';
-import { BaseTextInputBox } from '../BaseTextInputBox';
+import { BaseButton } from '../buttons/BaseButton';
+import { BaseContainer } from '../containers/BaseContainer';
+import { BaseTextBox } from '../text/BaseTextBox';
+import { BaseTextInputBox } from '../inputs/BaseTextInputBox';
 import { addEvent } from '../../services/database/databaseEvents';
 
 export const AddEventPage = ({ navigation }) => {

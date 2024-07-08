@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 
 import { getEventById, deleteEvent } from '../../services/database/databaseEvents';
-import { BaseButton } from '../BaseButton';
-import { BaseContainer } from '../BaseContainer';
-import { BaseTextBox } from '../BaseTextBox';
+import { BaseButton } from '../buttons/BaseButton';
+import { BaseContainer } from '../containers/BaseContainer';
+import { BaseTextBox } from '../text/BaseTextBox';
 
 export const ViewEventDetailPage = ({ route, navigation }) => {
     const { eventId } = route.params;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
 import { getEventById, updateEvent } from "../../services/database/databaseEvents";
-import { BaseContainer } from "../BaseContainer";
+import { BaseContainer } from "../containers/BaseContainer";
 
 export const EditEventDetailPage = ({ route, navigation }) => {
     const { eventId } = route.params;

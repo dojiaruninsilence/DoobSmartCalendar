@@ -3,8 +3,8 @@ import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 
 import { getAllEvents } from "../../services/database/databaseEvents";
 import { BaseButton } from "react-native-gesture-handler";
-import { BaseContainer } from "../BaseContainer";
-import { BaseTextBox } from "../BaseTextBox";
+import { BaseContainer } from "../containers/BaseContainer";
+import { BaseTextBox } from "../text/BaseTextBox";
 
 const formatDateTime = (year, month, day, hour, minute) => {
     return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} 
