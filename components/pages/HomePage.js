@@ -5,6 +5,8 @@ import { MenuItem } from "../navigation/MenuItem";
 export const HomePage = ({ navigation }) => {
     return (
         <View style={styles.container}>
+            <MenuItem title="Add User" onPress={() => navigation.navigate('AddUser')} />
+            <MenuItem title="View Users" onPress={() => navigation.navigate('ViewUsers')} />
             <MenuItem title="Add Event" onPress={() => navigation.navigate('AddEvent')} />
             <MenuItem title="View Events" onPress={() => navigation.navigate('ViewEvents')} />
             <MenuItem title="Calendar View" onPress={() => navigation.navigate('CalendarView')} />

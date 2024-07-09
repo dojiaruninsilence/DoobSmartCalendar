@@ -13,6 +13,14 @@ export const CustomDrawerContent = (props) => {
                 onPress={() => props.navigation.navigate('Home')}
             />
             <DrawerItem
+                label="Add User"
+                onPress={() => props.navigation.navigate('AddUser')}
+            />
+            <DrawerItem
+                label="View Users"
+                onPress={() => props.navigation.navigate('ViewUsers')}
+            />
+            <DrawerItem
                 label="Add Event"
                 onPress={() => props.navigation.navigate('AddEvent')}
             />

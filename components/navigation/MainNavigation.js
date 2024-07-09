@@ -4,6 +4,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import { HomePage } from '../pages/HomePage'
+import { AddUserPage } from '../users/AddUserPage';
+import { ViewUsersPage } from '../users/ViewUsersPage';
+import { ViewUserDetailPage } from '../users/ViewUserDetailPage';
+import { EditUserDetailPage } from '../users/EditUserDetailPage';
 import { AddEventPage } from '../events/AddEventPage';
 import { EditEventDetailPage } from '../events/EditEventDetailPage';
 import { ViewEventsPage } from '../events/ViewEventPage';
@@ -17,6 +21,10 @@ const Drawer = createDrawerNavigator();
 const HomeStack = () => (
     <Stack.Navigator>
         <Stack.Screen name="Home" component={HomePage} />
+        <Stack.Screen name="AddUser" component={AddUserPage} />
+        <Stack.Screen name="ViewUsers" component={ViewUsersPage} />
+        <Stack.Screen name="ViewUserDetail" component={ViewUserDetailPage} />
+        <Stack.Screen name="EditUserDetail" component={EditUserDetailPage} />
         <Stack.Screen name="AddEvent" component={AddEventPage} />
         <Stack.Screen name="ViewEvents" component={ViewEventsPage} />
         <Stack.Screen name="ViewEventDetail" component={ViewEventDetailPage} />
@@ -29,7 +37,7 @@ export const MainNavigation = () => {
     return (
         <NavigationContainer>
             <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
-                <Drawer.Screen name="Home" component={HomeStack} />
+                <Drawer.Screen name="Homes" component={HomeStack} />
             </Drawer.Navigator>
         </NavigationContainer>
     );
