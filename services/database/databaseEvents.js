@@ -153,7 +153,7 @@ export const addEvent = async (event) => {
         repeat_end_date_day, repeat_end_date_year, repeat_start_time_hour,
         repeat_start_time_minute, repeat_end_time_hour, 
         repeat_end_time_minute, is_main_event, is_sub_event, main_event,
-        color
+        color, group_id, user_id
     } = event;
 
     event = validateAndDefaultEvent(event)
@@ -180,11 +180,11 @@ export const addEvent = async (event) => {
                     repeat_end_date_day, repeat_end_date_year, repeat_start_time_hour,
                     repeat_start_time_minute, repeat_end_time_hour, 
                     repeat_end_time_minute, is_main_event, is_sub_event, main_event,
-                    color, created_at, updated_at
+                    color, group_id, user_id, created_at, updated_at
                 )
                 VALUES (
                     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now')
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now')
                 )
             `, [
                 event.title, event.description, event.notes, event.start_time_hour, event.start_time_minute,
@@ -196,7 +196,8 @@ export const addEvent = async (event) => {
                 event.repeat_flags, event.number_repeats, event.repeat_end_date_month, 
                 event.repeat_end_date_day, event.repeat_end_date_year, event.repeat_start_time_hour,
                 event.repeat_start_time_minute, event.repeat_end_time_hour, event.repeat_end_time_minute,
-                event.is_main_event, event.is_sub_event, event.main_event, event.color
+                event.is_main_event, event.is_sub_event, event.main_event, event.color,
+                event.group_id, event.user_id
             ]
         );
     } catch (error) {
@@ -250,7 +251,7 @@ export const updateEvent = async (id, updatedEvent) => {
         repeat_end_date_day, repeat_end_date_year, repeat_start_time_hour,
         repeat_start_time_minute, repeat_end_time_hour, 
         repeat_end_time_minute, is_main_event, is_sub_event, main_event,
-        color
+        color, group_id, user_id
     } = updatedEvent;
 
     updatedEvent = validateAndDefaultEvent(updatedEvent);
@@ -277,7 +278,7 @@ export const updateEvent = async (id, updatedEvent) => {
                     repeat_end_date_day = ?, repeat_end_date_year = ?, repeat_start_time_hour = ?,
                     repeat_start_time_minute = ?, repeat_end_time_hour = ?, 
                     repeat_end_time_minute = ?, is_main_event = ?, is_sub_event = ?,
-                    main_event = ?, color = ?, updated_at = datetime('now')
+                    main_event = ?, color = ?, group_id = ?, user_id = ?, updated_at = datetime('now')
                 WHERE id = ?
             `, [
                 updatedEvent.title, updatedEvent.description, updatedEvent.notes, updatedEvent.start_time_hour,
@@ -290,7 +291,8 @@ export const updateEvent = async (id, updatedEvent) => {
                 updatedEvent.repeat_flags, updatedEvent.number_repeats, updatedEvent.repeat_end_date_month, 
                 updatedEvent.repeat_end_date_day, updatedEvent.repeat_end_date_year, updatedEvent.repeat_start_time_hour,
                 updatedEvent.repeat_start_time_minute, updatedEvent.repeat_end_time_hour, updatedEvent.repeat_end_time_minute,
-                updatedEvent.is_main_event, updatedEvent.is_sub_event, updatedEvent.main_event, updatedEvent.color, id
+                updatedEvent.is_main_event, updatedEvent.is_sub_event, updatedEvent.main_event, updatedEvent.color,
+                updatedEvent.group_id, updatedEvent.user_id, id
         ]);
         return result.changes;
     } catch (error) {

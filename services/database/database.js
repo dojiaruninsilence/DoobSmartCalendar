@@ -1,6 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 
-const database_name = "doob_calendar_v_1_1.db";
+const database_name = "doob_calendar_v_1_2.db";
 let db;
 
 export const openDatabase = async () => {
@@ -48,8 +48,12 @@ export const openDatabase = async () => {
                 is_sub_event BOOLEAN,
                 main_event TEXT,
                 color TEXT,
+                group_id INTEGER,
+                user_id INTEGER,
                 created_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL
+                updated_at TEXT NOT NULL,
+                FOREIGN KEY (group_id) REFERENCES Groups(id),
+                FOREIGN KEY (user_id) REFERENCES Users(id)
             );
 
             CREATE TABLE IF NOT EXISTS Users (
@@ -57,6 +61,8 @@ export const openDatabase = async () => {
                 username TEXT NOT NULL,
                 email TEXT NOT NULL,
                 password_hash TEXT NOT NULL,
+                timezone INTEGER,
+                preference_flags INTEGER,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             );
@@ -64,6 +70,8 @@ export const openDatabase = async () => {
             CREATE TABLE IF NOT EXISTS Groups (
                 id INTEGER PRIMARY KEY NOT NULL,
                 name TEXT NOT NULL,
+                timezone INTEGER,
+                preference_flags INTEGER,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             );
@@ -79,6 +87,16 @@ export const openDatabase = async () => {
             CREATE TABLE IF NOT EXISTS RandomReminders (
                 id INTEGER PRIMARY KEY NOT NULL,
                 content TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS ColorGroups (
+                id INTEGER PRIMARY KEY NOT NULL,
+                name TEXT NOT NULL,
+                hex_color TEXT NOT NULL,
+                notes TEXT,
+                description TEXT,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             );
