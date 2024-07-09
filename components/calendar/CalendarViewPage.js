@@ -13,6 +13,7 @@ import { CalendarYearView } from "./CalenderYearView";
 export const CalendarViewPage = () => {
     const [zoomLevel, setZoomLevel] = useState('day');
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [halfDayStartTime, setHalfDayStartTime] = useState(null);
 
     const handleGesture = ({ nativeEvent }) => {
         if (nativeEvent.state === State.END) {
@@ -51,12 +52,18 @@ export const CalendarViewPage = () => {
         setZoomLevel('day');
     };
 
+    const handleHalfDayClick = (date, startTime) => {
+        setCurrentDate(date);
+        setHalfDayStartTime(startTime);
+        setZoomLevel('halfDay');
+    };
+
     const renderCalendar = () => {
         switch (zoomLevel) {
             case 'halfDay':
-                return <CalendarHalfDayView currentDate={currentDate} />;
+                return <CalendarHalfDayView currentDate={currentDate} startTime={halfDayStartTime}/>;
             case 'day':
-                return <CalendarDayView currentDate={currentDate} />;
+                return <CalendarDayView currentDate={currentDate} onHalfDayClick={handleHalfDayClick} />;
             case '3Day':
                 return <CalendarThreeDayView currentDate={currentDate} onDayClick={handleDayClick} />;
             case 'week':

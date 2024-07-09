@@ -1,6 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 
-const database_name = "doob_calendar_v_1.db";
+const database_name = "doob_calendar_v_1_1.db";
 let db;
 
 export const openDatabase = async () => {
@@ -47,6 +47,7 @@ export const openDatabase = async () => {
                 is_main_event BOOLEAN,
                 is_sub_event BOOLEAN,
                 main_event TEXT,
+                color TEXT,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             );
