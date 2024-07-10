@@ -11,6 +11,10 @@ export const HomePage = ({ navigation }) => {
             <MenuItem title="View Events" onPress={() => navigation.navigate('ViewEvents')} />
             <MenuItem title="Add Group" onPress={() => navigation.navigate('AddGroup')} />
             <MenuItem title="View Groups" onPress={() => navigation.navigate('ViewGroups')} />
+            <MenuItem title="Add Color Group" onPress={() => navigation.navigate('AddColorGroup')} />
+            <MenuItem title="View Color Groups" onPress={() => navigation.navigate('ViewColorGroups')} />
+            <MenuItem title="Add User Group" onPress={() => navigation.navigate('AddUserGroup')} />
+            <MenuItem title="View User Groups" onPress={() => navigation.navigate('ViewUserGroups')} />
             <MenuItem title="Calendar View" onPress={() => navigation.navigate('CalendarView')} />
         </View>
     )

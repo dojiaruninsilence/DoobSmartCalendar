@@ -33,11 +33,10 @@ export const addUserGroup = async (userGroup) => {
         const result = await db.runAsync(
             `
                 INSERT INTO UserGroups (
-                    user_id, group_id,
-                    created_at, updated_at
+                    user_id, group_id
                 )
                 VALUES (
-                    ?, ?, datetime('now'), datetime('now')
+                    ?, ?
                 )
             `, [
                 userGroup.user_id, userGroup.group_id
@@ -99,7 +98,7 @@ export const updateUserGroup = async (id, updatedUserGroup) => {
         const result = await db.runAsync(
             `
                 UPDATE UserGroups
-                SET user_id = ?, group_id = ?, updated_at = datetime('now')
+                SET user_id = ?, group_id = ?
                 WHERE id = ?
             `, [
                 updatedUserGroup.user_id, updatedUserGroup.group_id, id

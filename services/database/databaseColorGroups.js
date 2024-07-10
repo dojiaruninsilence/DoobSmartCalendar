@@ -88,7 +88,7 @@ export const updateColorGroup = async (id, updatedColorGroup) => {
         name, hex_color, notes, description
     } = updatedColorGroup;
 
-    if (!updatedUserGroup) {
+    if (!updatedColorGroup) {
         return Promise.reject("Invalid color group data");
     }
 

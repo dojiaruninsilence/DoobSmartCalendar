@@ -15,9 +15,17 @@ import { ViewEventDetailPage } from '../events/ViewEventDetailPage';
 import { AddGroupPage } from '../groups/AddGroupPage';
 import { ViewGroupsPage } from '../groups/ViewGroupsPage';
 import { ViewGroupDetailPage } from '../groups/ViewGroupDetailPage';
+import { EditGroupDetailPage } from '../groups/EditGroupDetailPage';
+import { AddColorGroupPage } from '../groups/colorGroups/AddColorGroupPage';
+import { ViewColorGroupsPage } from '../groups/colorGroups/ViewColorGroupsPage';
+import { ViewColorGroupDetailPage } from '../groups/colorGroups/ViewColorGroupDetailPage';
+import { EditColorGroupDetailPage } from '../groups/colorGroups/EditColorGroupDetailPage';
+import { AddUserGroupPage } from '../groups/userGroups/AddUserGroupPage';
+import { ViewUsersGroupsPage } from '../groups/userGroups/ViewUserGroupsPage';
+import { ViewUserGroupDetailPage } from '../groups/userGroups/ViewUserGroupDetailPage';
+import { EditUserGroupDetailPage } from '../groups/userGroups/EditUserGroupDetailPage';
 import { CalendarViewPage } from '../calendar/CalendarViewPage';
 import { CustomDrawerContent } from './CustomDrawerContent';
-import { EditGroupDetailPage } from '../groups/EditGroupDetailPage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -37,6 +45,14 @@ const HomeStack = () => (
         <Stack.Screen name="ViewGroups" component={ViewGroupsPage} />
         <Stack.Screen name="ViewGroupDetail" component={ViewGroupDetailPage} />
         <Stack.Screen name="EditGroupDetail" component={EditGroupDetailPage} />
+        <Stack.Screen name="AddColorGroup" component={AddColorGroupPage} />
+        <Stack.Screen name="ViewColorGroups" component={ViewColorGroupsPage} />
+        <Stack.Screen name="ViewColorGroupDetail" component={ViewColorGroupDetailPage} />
+        <Stack.Screen name="EditColorGroupDetail" component={EditColorGroupDetailPage} />
+        <Stack.Screen name="AddUserGroup" component={AddUserGroupPage} />
+        <Stack.Screen name="ViewUserGroups" component={ViewUsersGroupsPage} />
+        <Stack.Screen name="ViewUserGroupDetail" component={ViewUserGroupDetailPage} />
+        <Stack.Screen name="EditUserGroupDetail" component={EditUserGroupDetailPage} />
         <Stack.Screen name="CalendarView" component={CalendarViewPage} />
     </Stack.Navigator>
 );
