@@ -46,10 +46,10 @@ export const ViewUsersPage = ({ navigation }) => {
 const styles = StyleSheet.create({
     eventItem: {
         padding: 10,
-        borderBottomWidth: 1, 
+        borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
     dateText: {
         color: '#888',
     },
-})
+});

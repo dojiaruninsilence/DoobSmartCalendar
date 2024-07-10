@@ -12,8 +12,12 @@ import { AddEventPage } from '../events/AddEventPage';
 import { EditEventDetailPage } from '../events/EditEventDetailPage';
 import { ViewEventsPage } from '../events/ViewEventPage';
 import { ViewEventDetailPage } from '../events/ViewEventDetailPage';
+import { AddGroupPage } from '../groups/AddGroupPage';
+import { ViewGroupsPage } from '../groups/ViewGroupsPage';
+import { ViewGroupDetailPage } from '../groups/ViewGroupDetailPage';
 import { CalendarViewPage } from '../calendar/CalendarViewPage';
 import { CustomDrawerContent } from './CustomDrawerContent';
+import { EditGroupDetailPage } from '../groups/EditGroupDetailPage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -29,6 +33,10 @@ const HomeStack = () => (
         <Stack.Screen name="ViewEvents" component={ViewEventsPage} />
         <Stack.Screen name="ViewEventDetail" component={ViewEventDetailPage} />
         <Stack.Screen name="EditEventDetail" component={EditEventDetailPage} />
+        <Stack.Screen name="AddGroup" component={AddGroupPage} />
+        <Stack.Screen name="ViewGroups" component={ViewGroupsPage} />
+        <Stack.Screen name="ViewGroupDetail" component={ViewGroupDetailPage} />
+        <Stack.Screen name="EditGroupDetail" component={EditGroupDetailPage} />
         <Stack.Screen name="CalendarView" component={CalendarViewPage} />
     </Stack.Navigator>
 );

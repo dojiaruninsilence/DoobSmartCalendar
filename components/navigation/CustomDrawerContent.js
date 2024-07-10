@@ -29,6 +29,14 @@ export const CustomDrawerContent = (props) => {
                 onPress={() => props.navigation.navigate('ViewEvents')}
             />
             <DrawerItem
+                label="Add Group"
+                onPress={() => props.navigation.navigate('AddGroup')}
+            />
+            <DrawerItem
+                label="View Groups"
+                onPress={() => props.navigation.navigate('ViewGroups')}
+            />
+            <DrawerItem
                 label="Calendar View"
                 onPress={() => props.navigation.navigate('CalendarView')}
             />
