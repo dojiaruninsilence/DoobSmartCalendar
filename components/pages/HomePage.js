@@ -9,6 +9,8 @@ export const HomePage = ({ navigation }) => {
             <MenuItem title="View Users" onPress={() => navigation.navigate('ViewUsers')} />
             <MenuItem title="Add Event" onPress={() => navigation.navigate('AddEvent')} />
             <MenuItem title="View Events" onPress={() => navigation.navigate('ViewEvents')} />
+            <MenuItem title="Add Random Reminder" onPress={() => navigation.navigate('AddRandomReminder')} />
+            <MenuItem title="View Random Reminders" onPress={() => navigation.navigate('ViewRandomReminders')} />
             <MenuItem title="Add Group" onPress={() => navigation.navigate('AddGroup')} />
             <MenuItem title="View Groups" onPress={() => navigation.navigate('ViewGroups')} />
             <MenuItem title="Add Color Group" onPress={() => navigation.navigate('AddColorGroup')} />

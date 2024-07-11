@@ -12,6 +12,10 @@ import { AddEventPage } from '../events/AddEventPage';
 import { EditEventDetailPage } from '../events/EditEventDetailPage';
 import { ViewEventsPage } from '../events/ViewEventPage';
 import { ViewEventDetailPage } from '../events/ViewEventDetailPage';
+import { AddRandomReminderPage } from '../events/randomReminder/AddRandomReminderPage';
+import { ViewRandomRemindersPage } from '../events/randomReminder/ViewRandomRemindersPage';
+import { ViewRandomReminderDetailPage } from '../events/randomReminder/ViewRandomReminderDetailPage';
+import { EditRandomReminderDetailPage } from '../events/randomReminder/EditRandomReminderDetailPage';
 import { AddGroupPage } from '../groups/AddGroupPage';
 import { ViewGroupsPage } from '../groups/ViewGroupsPage';
 import { ViewGroupDetailPage } from '../groups/ViewGroupDetailPage';
@@ -41,6 +45,10 @@ const HomeStack = () => (
         <Stack.Screen name="ViewEvents" component={ViewEventsPage} />
         <Stack.Screen name="ViewEventDetail" component={ViewEventDetailPage} />
         <Stack.Screen name="EditEventDetail" component={EditEventDetailPage} />
+        <Stack.Screen name="AddRandomReminder" component={AddRandomReminderPage} />
+        <Stack.Screen name="ViewRandomReminders" component={ViewRandomRemindersPage} />
+        <Stack.Screen name="ViewRandomReminderDetail" component={ViewRandomReminderDetailPage} />
+        <Stack.Screen name="EditRandomReminderDetail" component={EditRandomReminderDetailPage} />
         <Stack.Screen name="AddGroup" component={AddGroupPage} />
         <Stack.Screen name="ViewGroups" component={ViewGroupsPage} />
         <Stack.Screen name="ViewGroupDetail" component={ViewGroupDetailPage} />

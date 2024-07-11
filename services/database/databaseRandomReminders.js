@@ -32,7 +32,7 @@ export const addRandomReminder = async (randomReminder) => {
     try {
         const result = await db.runAsync(
             `
-                INSERT INTO RandomReminder (
+                INSERT INTO RandomReminders (
                     content,
                     created_at, updated_at
                 )
@@ -87,7 +87,7 @@ export const updateRandomReminder = async (id, updatedRandomReminder) => {
         content
     } = updatedRandomReminder;
 
-    if (!updatedUserGroup) {
+    if (!updatedRandomReminder) {
         return Promise.reject("Invalid random reminder data");
     }
 
@@ -98,7 +98,7 @@ export const updateRandomReminder = async (id, updatedRandomReminder) => {
     try {
         const result = await db.runAsync(
             `
-                UPDATE UserGroups
+                UPDATE RandomReminders
                 SET content = ?, updated_at = datetime('now')
                 WHERE id = ?
             `, [

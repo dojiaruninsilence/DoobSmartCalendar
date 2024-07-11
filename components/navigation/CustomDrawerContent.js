@@ -29,6 +29,14 @@ export const CustomDrawerContent = (props) => {
                 onPress={() => props.navigation.navigate('ViewEvents')}
             />
             <DrawerItem
+                label="Add Random Reminder"
+                onPress={() => props.navigation.navigate('AddRandomReminder')}
+            />
+            <DrawerItem
+                label="View RandomReminders"
+                onPress={() => props.navigation.navigate('ViewRandomReminders')}
+            />
+            <DrawerItem
                 label="Add Group"
                 onPress={() => props.navigation.navigate('AddGroup')}
             />
