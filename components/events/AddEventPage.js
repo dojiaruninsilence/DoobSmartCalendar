@@ -9,6 +9,9 @@ import { addEvent } from '../../services/database/databaseEvents';
 import { DateInput } from '../inputs/DateInput';
 import { TimeInput } from '../inputs/TimeInput';
 import { DateTimeInput } from '../inputs/DateTimeInput';
+import { DurationInput } from '../inputs/DurationInput';
+import { BaseLargeTextInputBox } from '../inputs/BaseLargeTextInputBox';
+import { BaseMidTextInputBox } from '../inputs/BaseMidTextInputBox';
 
 export const AddEventPage = ({ navigation }) => {
     const [title, setTitle] = useState('');
@@ -86,15 +89,10 @@ export const AddEventPage = ({ navigation }) => {
                     onChangeText={setTitle}
                     placeholder="Title"
                 />
-                <BaseTextInputBox
+                <BaseMidTextInputBox
                     value={description}
                     onChangeText={setDescription}
                     placeholder="Description"
-                />
-                <BaseTextInputBox
-                    value={notes}
-                    onChangeText={setNotes}
-                    placeholder="Notes"
                 />
                 <DateTimeInput
                     label="Start"
@@ -131,54 +129,36 @@ export const AddEventPage = ({ navigation }) => {
                     minute={endMinute}
                     setMinute={setEndMinute}
                     minutePlaceholder="mm"
-                /> 
-                <BaseTextInputBox
-                    value={endHour}
-                    onChangeText={setEndHour}
-                    placeholder="End Hour (0-23)"
-                    keyboardType="numeric"
                 />
-                <BaseTextInputBox
-                    value={endMinute}
-                    onChangeText={setEndMinute}
-                    placeholder="End Minute (0-59)"
-                    keyboardType="numeric"
+                <DateTimeInput
+                    label="Deadline"
+                    month={deadlineMonth}
+                    setMonth={setDeadlineMonth}
+                    monthPlaceholder="MM"
+                    day={deadlineDay}
+                    setDay={setDeadlineDay}
+                    dayPlaceholder="DD"
+                    year={deadlineYear}
+                    setYear={setDeadlineYear}
+                    yearPlaceholder="YYYY"
+                    hour={deadlineHour}
+                    setHour={setDeadlineHour}
+                    hourPlaceholder="HH"
+                    minute={deadlineMinute}
+                    setMinute={setDeadlineMinute}
+                    minutePlaceholder="mm"
                 />
-                <BaseTextInputBox
-                    value={endMonth}
-                    onChangeText={setEndMonth}
-                    placeholder="End Month (1-12)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={endDay}
-                    onChangeText={setEndDay}
-                    placeholder="End Day (1-31)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={endYear}
-                    onChangeText={setEndYear}
-                    placeholder="End Year"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={durationDays}
-                    onChangeText={setDurationDays}
-                    placeholder="Duration Days (0-999)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={durationHours}
-                    onChangeText={setDurationHours}
-                    placeholder="Duration Hour (0-23)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={durationMinutes}
-                    onChangeText={setDurationMinutes}
-                    placeholder="Duration Minutes (0-59)"
-                    keyboardType="numeric"
+                <DurationInput
+                    label="Duration"
+                    day={durationDays}
+                    setDay={setDurationDays}
+                    dayPlaceholder="DD"
+                    hour={durationHours}
+                    setHour={setDurationHours}
+                    hourPlaceholder="HH"
+                    minute={durationMinutes}
+                    setMinute={setDurationMinutes}
+                    minutePlaceholder="mm"
                 />
                 <BaseTextInputBox
                     value={importance}
@@ -186,37 +166,11 @@ export const AddEventPage = ({ navigation }) => {
                     placeholder="Importance (1-10)"
                     keyboardType="numeric"
                 />
-                <BaseTextInputBox
-                    value={deadlineHour}
-                    onChangeText={setDeadlineHour}
-                    placeholder="Deadline Hour (0-23)"
-                    keyboardType="numeric"
+                <BaseLargeTextInputBox
+                    value={notes}
+                    onChangeText={setNotes}
+                    placeholder="Notes"
                 />
-                <BaseTextInputBox
-                    value={deadlineMinute}
-                    onChangeText={setDeadlineMinute}
-                    placeholder="Deadline Minute (0-59)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={deadlineMonth}
-                    onChangeText={setDeadlineMonth}
-                    placeholder="Deadline Month (1-12)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={deadlineDay}
-                    onChangeText={setDeadlineDay}
-                    placeholder="Deadline Day (1-31)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={deadlineYear}
-                    onChangeText={setDeadlineYear}
-                    placeholder="Deadline Year"
-                    keyboardType="numeric"
-                />
-                
                 <View style={styles.switchContainer}>
                     <Text style={styles.label}>Is Repeating</Text>
                     <Switch value={isRepeating} onValueChange={setIsRepeating} />
