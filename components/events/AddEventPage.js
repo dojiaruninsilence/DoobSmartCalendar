@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, ScrollView, Switch, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Alert, ScrollView, Switch, StyleSheet } from 'react-native';
 
 import { BaseButton } from '../buttons/BaseButton';
 import { BaseContainer } from '../containers/BaseContainer';
 import { BaseTextBox } from '../text/BaseTextBox';
 import { BaseTextInputBox } from '../inputs/BaseTextInputBox';
 import { addEvent } from '../../services/database/databaseEvents';
+import { DateInput } from '../inputs/DateInput';
+import { TimeInput } from '../inputs/TimeInput';
+import { DateTimeInput } from '../inputs/DateTimeInput';
 
 export const AddEventPage = ({ navigation }) => {
     const [title, setTitle] = useState('');
@@ -74,7 +77,7 @@ export const AddEventPage = ({ navigation }) => {
     };
 
     return (
-        <BaseContainer>
+        <View style={styles.container}>
             <ScrollView>
                 <BaseTextBox>Add New Event</BaseTextBox>
 
@@ -93,36 +96,42 @@ export const AddEventPage = ({ navigation }) => {
                     onChangeText={setNotes}
                     placeholder="Notes"
                 />
-                <BaseTextInputBox
-                    value={startHour}
-                    onChangeText={setStartHour}
-                    placeholder="Start Hour (0-23)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={startMinute}
-                    onChangeText={setStartMinute}
-                    placeholder="Start Minute (0-59)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={startMonth}
-                    onChangeText={setStartMonth}
-                    placeholder="Start Month (1-12)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={startDay}
-                    onChangeText={setStartDay}
-                    placeholder="Start Day (1-31)"
-                    keyboardType="numeric"
-                />
-                <BaseTextInputBox
-                    value={startYear}
-                    onChangeText={setStartYear}
-                    placeholder="Start Year"
-                    keyboardType="numeric"
-                />
+                <DateTimeInput
+                    label="Start"
+                    month={startMonth}
+                    setMonth={setStartMonth}
+                    monthPlaceholder="MM"
+                    day={startDay}
+                    setDay={setStartDay}
+                    dayPlaceholder="DD"
+                    year={startYear}
+                    setYear={setStartYear}
+                    yearPlaceholder="YYYY"
+                    hour={startHour}
+                    setHour={setStartHour}
+                    hourPlaceholder="HH"
+                    minute={startMinute}
+                    setMinute={setStartMinute}
+                    minutePlaceholder="mm"
+                /> 
+                <DateTimeInput
+                    label="End"
+                    month={endMonth}
+                    setMonth={setEndMonth}
+                    monthPlaceholder="MM"
+                    day={endDay}
+                    setDay={setEndDay}
+                    dayPlaceholder="DD"
+                    year={endYear}
+                    setYear={setEndYear}
+                    yearPlaceholder="YYYY"
+                    hour={endHour}
+                    setHour={setEndHour}
+                    hourPlaceholder="HH"
+                    minute={endMinute}
+                    setMinute={setEndMinute}
+                    minutePlaceholder="mm"
+                /> 
                 <BaseTextInputBox
                     value={endHour}
                     onChangeText={setEndHour}
@@ -237,11 +246,16 @@ export const AddEventPage = ({ navigation }) => {
                     navigation.navigate('ViewEvents');
                 }} />
             </ScrollView>
-        </BaseContainer>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },  
     switchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -251,5 +265,51 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         color: '#333333',
+    },
+    tallBox: {
+        height: 30,
+    },
+    dateContainer: {
+        flexDirection: 'row',
+        paddingHorizontal: 5,
+        width: '50%',
+    },
+    dateInput: {
+        height: 40,
+        width: '33%',
+        borderColor: '#023020',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        backgroundColor: '#ECFFDC',
+        marginVertical: 10,
+    },
+    timeContainer: {
+        flexDirection: 'row',
+        paddingHorizontal: 5,
+        width: '30%',
+    },
+    timeInput: {
+        height: 40,
+        width: '45%',
+        borderColor: '#023020',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        backgroundColor: '#ECFFDC',
+        marginVertical: 10,
+    },
+    textContainer: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '23%',
+        paddingHorizontal: 10,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '99%',
     },
 })
