@@ -19,5 +19,6 @@ const styles = StyleSheet.create({
     },
     menuItemText: {
         fontSize: 18,
+        textAlign: 'center',
     },
 });
