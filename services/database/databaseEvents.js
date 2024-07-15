@@ -34,6 +34,7 @@ const validateAndDefaultEvent = (event) => {
     const currentMonth = now.getMonth() + 1; // getMonth() returns 0-11
     const currentDay = now.getDate();
     const currentYear = now.getFullYear();
+    const defaultColor = '#D3D3D3';
 
     // check for incomplete time groupings
     const timeGroups = [
@@ -135,6 +136,8 @@ const validateAndDefaultEvent = (event) => {
 
     event.importance = (event.importance >= 1 && event.importance <= 10) ? event.importance : 1;
 
+    event.color = event.color ? event.color : defaultColor;
+
     return event;
 };
 
@@ -218,6 +221,24 @@ export const getEventById = async (id) => {
         return event || null;
     } catch (error) {
         return Promise.reject(`Error fetching event: ${error}`);
+    }
+};
+
+export const getEventsForDate = async (date) => {
+    await ensureDBInitialized();
+
+    if (!db) {
+        return Promise.reject("Database is not initialized");
+    }
+
+    try {
+        const events = await db.getAllAsync(
+            'SELECT * FROM Events WHERE start_date_year = ? AND start_date_month = ? AND start_date_day = ?',
+            [parseInt(date.substring(0, 4)), parseInt(date.substring(5, 7)), parseInt(date.substring(8, 10))]
+        );
+        return events;
+    } catch (error) {
+        return Promise.reject(`Error fetching events: ${error}`);
     }
 };
 

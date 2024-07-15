@@ -41,6 +41,7 @@ export const AddEventPage = ({ navigation }) => {
     const [isMainEvent, setIsMainEvent] = useState(false);
     const [isSubEvent, setIsSubEvent] = useState(false);
     const [mainEvent, setMainEvent] = useState('');
+    const [color, setColor] = useState('');
 
     const handleAddEvent = async () => {
         try {
@@ -71,7 +72,8 @@ export const AddEventPage = ({ navigation }) => {
                 number_repeats: numberRepeats,
                 is_main_event: isMainEvent,
                 is_sub_event: isSubEvent,
-                main_event: mainEvent
+                main_event: mainEvent,
+                color
             });
             Alert.alert("Success", "Event added successfully");
         } catch (error) {
@@ -165,6 +167,11 @@ export const AddEventPage = ({ navigation }) => {
                     onChangeText={setImportance}
                     placeholder="Importance (1-10)"
                     keyboardType="numeric"
+                />
+                <BaseTextInputBox
+                    value={color}
+                    onChangeText={setColor}
+                    placeholder="Hexidecimal color code"
                 />
                 <BaseLargeTextInputBox
                     value={notes}

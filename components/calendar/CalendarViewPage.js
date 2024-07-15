@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import moment from "moment";
@@ -9,11 +9,23 @@ import { CalendarThreeDayView } from "./CalendarThreeDayView";
 import { CalendarWeekView } from "./CalendarWeekView";
 import { CalendarMonthView } from "./CalendarMonthView";
 import { CalendarYearView } from "./CalenderYearView";
+import { getEventsForDate } from "../../services/database/databaseEvents";
 
-export const CalendarViewPage = () => {
+export const CalendarViewPage = ({ navigation }) => {
     const [zoomLevel, setZoomLevel] = useState('day');
     const [currentDate, setCurrentDate] = useState(new Date());
     const [halfDayStartTime, setHalfDayStartTime] = useState(null);
+    const [events, setEvents] = useState([]);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            const dateStr = moment(currentDate).format('YYYY-MM-DD');
+            const fetchedEvents = await getEventsForDate(dateStr);
+            setEvents(fetchedEvents);
+        };
+
+        fetchEvents();
+    }, [currentDate]);
 
     const handleGesture = ({ nativeEvent }) => {
         if (nativeEvent.state === State.END) {
@@ -63,7 +75,12 @@ export const CalendarViewPage = () => {
             case 'halfDay':
                 return <CalendarHalfDayView currentDate={currentDate} startTime={halfDayStartTime}/>;
             case 'day':
-                return <CalendarDayView currentDate={currentDate} onHalfDayClick={handleHalfDayClick} />;
+                return <CalendarDayView
+                    currentDate={currentDate}
+                    events={events}
+                    onHalfDayClick={handleHalfDayClick}
+                    navigation={navigation}
+                />;
             case '3Day':
                 return <CalendarThreeDayView currentDate={currentDate} onDayClick={handleDayClick} />;
             case 'week':

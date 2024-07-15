@@ -2,9 +2,33 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 
-export const CalendarDayView = ({ currentDate, onHalfDayClick }) => {
+export const CalendarDayView = ({ currentDate, events, onHalfDayClick, navigation }) => {
     const formattedDate = moment(currentDate).format('MMMM Do YYYY');
     const hours = Array.from({ length: 24 }, (_, i) => i);
+
+    const renderEventBox = (event) => {
+        const startHour = event.start_time_hour;
+        const endHour = event.end_time_hour;
+        const startMinute = event.start_time_minute;
+        const endMinute = event.end_time_minute;
+
+        const top = (startHour * 60 + startMinute) / (24 * 60) * 100;
+        const height = ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) /
+            (24 * 60) * 100;
+        
+        return (
+            <TouchableOpacity
+                key={event.id}
+                style={[
+                    styles.eventBox,
+                    { top: `${top}%`, height: `${height}%`, backgroundColor: event.color }
+                ]}
+                onPress={() => navigation.navigate('ViewEventDetail', { eventId: event.id })}
+            >
+                <Text style={styles.eventText}>{event.title}</Text>
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <View style={styles.container}>
@@ -34,6 +58,9 @@ export const CalendarDayView = ({ currentDate, onHalfDayClick }) => {
                         </View>
                     ))}
                 </View>
+                <View style={styles.eventsContainer}>
+                    {events.map(event => renderEventBox(event))}
+                </View>
             </View>
         </View>
     );
@@ -49,31 +76,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     dateText: {
-        fontSize: 20,
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    timeText: {
+        fontSize: 16,
     },
     timeContainer: {
-        flexDirection: 'row',
         width: '100%',
         height: '100%',
     },
-    halfBoxContainer: {
-        flex:3,
-    },
-    halfBox: {
-        width: '100%',
-        height: '50%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#000',
-    },
-    timeText: {
-        fontSize: 18,
-    },
     hoursContainer: {
-        flex: 1,
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
     },
     hourMark: {
         flex: 1,
@@ -82,5 +101,38 @@ const styles = StyleSheet.create({
     },
     hourText: {
         fontSize: 12,
+        color: '#000',
+    },
+    eventsContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0, 
+        right: 0,
+        bottom: 0,
+        zIndex: 2,
+    },
+    eventBox: {
+        position: 'absolute',
+        left: '5%',
+        width: '90%',
+        backgroundColor: 'lightblue',
+        borderRadius: 4,
+        padding: 4,
+    },
+    eventText: {
+        fontSize: 14,
+        color: '#000',
+    },
+    halfBoxContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    halfBox: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 5,
+        borderWidth: 1,
     },
 });
