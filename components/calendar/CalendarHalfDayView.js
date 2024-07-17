@@ -1,11 +1,40 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 
-export const CalendarHalfDayView = ({ currentDate, startTime }) => {
+import { getTextColor } from '../../utils/colors';
+import { calculateEventLayout } from '../../utils/calendarUtils/eventLayout';
+
+export const CalendarHalfDayView = ({ currentDate, startTime, events, navigation }) => {
     const formattedDate = moment(currentDate).format('MMMM Do YYYY');
     const startHour = startTime === 'AM' ? 0 : 12;
-    const hours = Array.from({ length: 12 }, (_, i) => i + startHour);
+    const totalHours = 12;
+    const hours = Array.from({ length: totalHours }, (_, i) => i + startHour);
+    const eventLayouts = calculateEventLayout(events, startHour, totalHours);
+
+    const renderEventBox = (event) => {
+        const textColor = getTextColor(event.color);
+        const width = 90 / (eventLayouts.length > 3 ? 3 : eventLayouts.length);
+
+        return (
+            <TouchableOpacity
+                key={event.id}
+                style={[
+                    styles.eventBox,
+                    {
+                        top: `${event.top}%`,
+                        height: `${event.height}%`,
+                        backgroundColor: event.color,
+                        width: `${width}%`,
+                        left: `${event.column * width + 5}%`,
+                    }
+                ]}
+                onPress={() => navigation.navigate('ViewEventDetail', { eventId: event.id })}
+            >
+                <Text style={[styles.eventText, { color: textColor }]}>{event.title}</Text>
+            </TouchableOpacity>
+        )
+    }
 
     return (
         <View style={styles.container}>
@@ -20,6 +49,9 @@ export const CalendarHalfDayView = ({ currentDate, startTime }) => {
                         </Text>
                     </View>
                 ))}
+                <View style={styles.eventsContainer}>
+                    {eventLayouts.map(event => renderEventBox(event))}
+                </View>
             </View>
         </View>
     );
@@ -38,17 +70,36 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     hoursContainer: {
-        flex: 1,
-        width: '100%',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
     },
     hourMark: {
-        height: '8.33%', // 100% / 12 hours
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'flex-end',
     },
     hourText: {
         fontSize: 12,
+    },
+    eventsContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 2,
+    },
+    eventBox: {
+        position: 'absolute',
+        backgroundColor: 'lightblue',
+        borderRadius: 4,
+        padding: 4,
+    },
+    eventText: {
+        fontSize: 14,
     },
 });

@@ -3,86 +3,35 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 
 import { getTextColor } from '../../utils/colors';
+import { calculateEventLayout } from '../../utils/calendarUtils/eventLayout';
 
 export const CalendarDayView = ({ currentDate, events, onHalfDayClick, navigation }) => {
     const formattedDate = moment(currentDate).format('MMMM Do YYYY');
     const hours = Array.from({ length: 24 }, (_, i) => i);
+    const eventLayouts = calculateEventLayout(events, 0, 24);
 
-    // function to find overlapping events
-    // const findOverlappingEvents = (event, events) => {
-    //     return events.filter((e) => {
-    //         return (
-    //             (event.start_time_hour < e.end_time_hour || (event.start_time_hour === e.end_time_hour && event.start_time_minute < e.end_time_minute)) &&
-    //             (event.end_time_hour > e.start_time_hour || (event.end_time_hour === e.start_time_hour && event.end_time_minute > e.start_time_minute)) &&
-    //             event.id !== e.id
-    //         );
-    //     });
-    // };
-
-    const calculateEventColumns = (events) => {
-        const eventColumns = [];
-        const sortedEvents = [...events].sort((a, b) => {
-            if (a.start_time_hour !== b.start_time_hour) {
-                return a.start_time_hour - b.start_time_hour;
-            }
-            return a.start_time_minute - b.start_time_minute;
-        });
-
-        sortedEvents.forEach(event => {
-            let placed = false;
-            for (let col of eventColumns) {
-                if (!col.some(e =>
-                    (event.start_time_hour < e.end_time_hour || (event.start_time_hour === e.end_time_hour && event.start_time_minute < e.end_time_minute)) &&
-                    (event.end_time_hour > e.start_time_hour || (event.end_time_hour === e.start_time_hour && event.end_time_minute > e.start_time_minute))
-                )) {
-                    col.push(event);
-                    placed = true;
-                    break;
-                }
-            }
-            if (!placed) {
-                eventColumns.push([event]);
-            }
-        });
-
-        return eventColumns;
-    };
-
-    const renderEventBox = (event, columnIndex, totalColumns) => {
-        const startHour = event.start_time_hour;
-        const endHour = event.end_time_hour;
-        const startMinute = event.start_time_minute;
-        const endMinute = event.end_time_minute;
-
-        const top = (startHour * 60 + startMinute) / (24 * 60) * 100;
-        const height = ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) /
-            (24 * 60) * 100;
-        
+    const renderEventBox = (event) => {
         const textColor = getTextColor(event.color);
 
-        const width = `${100 / totalColumns}%`;
-        const left = `${columnIndex * (100 / totalColumns)}%`;
-
+        const width = 90 / (eventLayouts.length > 3 ? 3 : eventLayouts.length);
         
         return (
             <TouchableOpacity
                 key={event.id}
                 style={[
                     styles.eventBox,
-                    { top: `${top}%`, height: `${height}%`, backgroundColor: event.color, width, left }
+                    {
+                        top: `${event.top}%`,
+                        height: `${event.height}%`,
+                        backgroundColor: event.color,
+                        width: `${width}%`,
+                        left: `${event.column * width + 5}%`,
+                    }
                 ]}
                 onPress={() => navigation.navigate('ViewEventDetail', { eventId: event.id })}
             >
                 <Text style={[styles.eventText, { color: textColor }]}>{event.title}</Text>
             </TouchableOpacity>
-        );
-    };
-
-    const renderEvents = (events) => {
-        const eventColumns = calculateEventColumns(events);
-
-        return eventColumns.flatMap((column, columnIndex) =>
-            column.map(event => renderEventBox(event, columnIndex, eventColumns.length))
         );
     };
 
@@ -115,7 +64,7 @@ export const CalendarDayView = ({ currentDate, events, onHalfDayClick, navigatio
                     ))}
                 </View>
                 <View style={styles.eventsContainer}>
-                    {renderEvents(events)}
+                    {eventLayouts.map(event => renderEventBox(event))}
                 </View>
             </View>
         </View>

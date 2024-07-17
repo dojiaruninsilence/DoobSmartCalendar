@@ -29,7 +29,7 @@ export const CalendarViewPage = ({ navigation }) => {
 
     const handleGesture = ({ nativeEvent }) => {
         if (nativeEvent.state === State.END) {
-            if (nativeEvent.translationX < 0) {
+            if (nativeEvent.translationX < -30) {
                 // swipe left - advance date
                 setCurrentDate(prevDate => {
                     if (zoomLevel === 'week') {
@@ -42,7 +42,7 @@ export const CalendarViewPage = ({ navigation }) => {
                         return new Date(prevDate.setDate(prevDate.getDate() + 1));
                     }
                 });
-            } else if (nativeEvent.translationX > 0) {
+            } else if (nativeEvent.translationX > 30) {
                 // swipe right - go back in time
                 setCurrentDate(prevDate => {
                     if (zoomLevel === 'week') {
@@ -55,6 +55,12 @@ export const CalendarViewPage = ({ navigation }) => {
                         return new Date(prevDate.setDate(prevDate.getDate() - 1));
                     }
                 });
+            } else if (nativeEvent.translationY > 30 && zoomLevel === 'halfDay') {
+                // swipe down - switch to AM half
+                setHalfDayStartTime('AM');
+            } else if (nativeEvent.translationY < -30 && zoomLevel === 'halfDay') {
+                // swipe up - switch to PM half
+                setHalfDayStartTime('PM');
             }
         }
     };
@@ -73,7 +79,12 @@ export const CalendarViewPage = ({ navigation }) => {
     const renderCalendar = () => {
         switch (zoomLevel) {
             case 'halfDay':
-                return <CalendarHalfDayView currentDate={currentDate} startTime={halfDayStartTime}/>;
+                return <CalendarHalfDayView
+                    currentDate={currentDate}
+                    events={events}
+                    startTime={halfDayStartTime}
+                    navigation={navigation}
+                />;
             case 'day':
                 return <CalendarDayView
                     currentDate={currentDate}
@@ -82,7 +93,12 @@ export const CalendarViewPage = ({ navigation }) => {
                     navigation={navigation}
                 />;
             case '3Day':
-                return <CalendarThreeDayView currentDate={currentDate} onDayClick={handleDayClick} />;
+                return <CalendarThreeDayView
+                    currentDate={currentDate}
+                    events={events}
+                    onDayClick={handleDayClick}
+                    navigation={navigation}
+                />;
             case 'week':
                 return <CalendarWeekView currentDate={currentDate} onDayClick={handleDayClick} />;
             case 'month':
