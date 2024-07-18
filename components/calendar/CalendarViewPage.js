@@ -16,12 +16,20 @@ export const CalendarViewPage = ({ navigation }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [halfDayStartTime, setHalfDayStartTime] = useState(null);
     const [events, setEvents] = useState([]);
+    const [prevEvents, setPrevEvents] = useState([]);
+    const [nextEvents, setNextEvents] = useState([]);
 
     useEffect(() => {
         const fetchEvents = async () => {
             const dateStr = moment(currentDate).format('YYYY-MM-DD');
-            const fetchedEvents = await getEventsForDate(dateStr);
+            const prevDateStr = moment(currentDate).subtract(1, 'days').format('YYYY-MM-DD');
+            const nextDateStr = moment(currentDate).add(1, 'days').format('YYYY-MM-DD');
+            let fetchedEvents = await getEventsForDate(dateStr);
             setEvents(fetchedEvents);
+            fetchedEvents = await getEventsForDate(prevDateStr);
+            setPrevEvents(fetchedEvents);
+            fetchedEvents = await getEventsForDate(nextDateStr);
+            setNextEvents(fetchedEvents);
         };
 
         fetchEvents();
@@ -96,6 +104,8 @@ export const CalendarViewPage = ({ navigation }) => {
                 return <CalendarThreeDayView
                     currentDate={currentDate}
                     events={events}
+                    prevEvents={prevEvents}
+                    nextEvents={nextEvents}
                     onDayClick={handleDayClick}
                     navigation={navigation}
                 />;

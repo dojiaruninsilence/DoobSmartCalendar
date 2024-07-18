@@ -5,15 +5,19 @@ import moment from 'moment';
 import { getTextColor } from '../../utils/colors';
 import { calculateEventLayout } from '../../utils/calendarUtils/eventLayout';
 
-export const CalendarThreeDayView = ({ currentDate, events, onDayClick, navigation }) => {
+export const CalendarThreeDayView = ({ currentDate, events, prevEvents, nextEvents, onDayClick, navigation }) => {
     const formattedDate = moment(currentDate).format('MMMM Do YYYY');
     const prevDate = moment(currentDate).subtract(1, 'days');
     const nextDate = moment(currentDate).add(1, 'days');
 
     const dates = [prevDate, moment(currentDate), nextDate];
     const hours = Array.from({ length: 24 }, (_, i) => i);
+    
+    const eventLayouts = calculateEventLayout(events, 0, 24);
+    const prevEventLayouts = calculateEventLayout(prevEvents, 0, 24);
+    const nextEventLayouts = calculateEventLayout(nextEvents, 0, 24);
 
-    const renderEventBox = (event, eventLayouts) => {
+    const renderEventBox = (event) => {
         const textColor = getTextColor(event.color);
         const width = 90 / (eventLayouts.length > 3 ? 3 : eventLayouts.length);
 
@@ -43,7 +47,16 @@ export const CalendarThreeDayView = ({ currentDate, events, onDayClick, navigati
                 const dayEvents = events.filter(event =>
                     moment(event.start_date).isSame(date, 'day')
                 );
-                const eventLayouts = calculateEventLayout(dayEvents, 0, 24);
+
+                let eventLayout;
+                //const eventLayouts = calculateEventLayout(dayEvents, 0, 24);
+                if (index === 0) {
+                    eventLayout = prevEventLayouts;
+                } else if (index === 1) {
+                    eventLayout = eventLayouts;
+                } else if (index === 2) {
+                    eventLayout = nextEventLayouts;
+                }
 
                 return (
                     <TouchableOpacity
@@ -51,6 +64,7 @@ export const CalendarThreeDayView = ({ currentDate, events, onDayClick, navigati
                         style={[styles.dayContainer, index === 1 && styles.centerBox]}
                         onPress={() => onDayClick(date.toDate())}
                     >
+                        
                         <Text style={styles.dateText}>{date.format('MMMM Do YYYY')}</Text>
                         <View style={styles.hoursContainer}>
                             {hours.map((hour) => (
@@ -62,7 +76,7 @@ export const CalendarThreeDayView = ({ currentDate, events, onDayClick, navigati
                             ))}
                         </View>
                         <View style={styles.eventsContainer}>
-                            {eventLayouts.map(event => renderEventBox(event, eventLayouts))}
+                            {eventLayout.map(event => renderEventBox(event))}
                         </View>
                     </TouchableOpacity>
                 );
@@ -124,6 +138,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         borderRadius: 4,
         padding: 4,
+        zIndex: 3,
     },
     eventText: {
         fontSize: 14,
