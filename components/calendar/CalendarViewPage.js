@@ -9,27 +9,25 @@ import { CalendarThreeDayView } from "./CalendarThreeDayView";
 import { CalendarWeekView } from "./CalendarWeekView";
 import { CalendarMonthView } from "./CalendarMonthView";
 import { CalendarYearView } from "./CalenderYearView";
-import { getEventsForDate } from "../../services/database/databaseEvents";
+import { getEventsForDate, getEventsForThreeDay, getEventsForWeek } from "../../services/database/databaseEvents";
 
 export const CalendarViewPage = ({ navigation }) => {
     const [zoomLevel, setZoomLevel] = useState('day');
     const [currentDate, setCurrentDate] = useState(new Date());
     const [halfDayStartTime, setHalfDayStartTime] = useState(null);
     const [events, setEvents] = useState([]);
-    const [prevEvents, setPrevEvents] = useState([]);
-    const [nextEvents, setNextEvents] = useState([]);
+    const [threeDayEvents, setThreeDayEvents] = useState([]);
+    const [weekEvents, setWeekEvents] = useState([]);
 
     useEffect(() => {
         const fetchEvents = async () => {
             const dateStr = moment(currentDate).format('YYYY-MM-DD');
-            const prevDateStr = moment(currentDate).subtract(1, 'days').format('YYYY-MM-DD');
-            const nextDateStr = moment(currentDate).add(1, 'days').format('YYYY-MM-DD');
             let fetchedEvents = await getEventsForDate(dateStr);
             setEvents(fetchedEvents);
-            fetchedEvents = await getEventsForDate(prevDateStr);
-            setPrevEvents(fetchedEvents);
-            fetchedEvents = await getEventsForDate(nextDateStr);
-            setNextEvents(fetchedEvents);
+            fetchedEvents = await getEventsForThreeDay(dateStr);
+            setThreeDayEvents(fetchedEvents);
+            fetchedEvents = await getEventsForWeek(dateStr);
+            setWeekEvents(fetchedEvents);
         };
 
         fetchEvents();
@@ -103,14 +101,17 @@ export const CalendarViewPage = ({ navigation }) => {
             case '3Day':
                 return <CalendarThreeDayView
                     currentDate={currentDate}
-                    events={events}
-                    prevEvents={prevEvents}
-                    nextEvents={nextEvents}
+                    events={threeDayEvents}
                     onDayClick={handleDayClick}
                     navigation={navigation}
                 />;
             case 'week':
-                return <CalendarWeekView currentDate={currentDate} onDayClick={handleDayClick} />;
+                return <CalendarWeekView
+                    currentDate={currentDate}
+                    weekEvents={weekEvents}
+                    onDayClick={handleDayClick}
+                    navigation={navigation}
+                />;
             case 'month':
                 return <CalendarMonthView currentDate={currentDate} onDayClick={handleDayClick} />;
             case 'year':

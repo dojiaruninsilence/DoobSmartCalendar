@@ -23,6 +23,13 @@ export const separateDateTime = (dateTimeString) => {
     return { month, day, year, hours, minutes };
 };
 
+export const separateDate = (dateString) => {
+    const dateStr = moment(dateString).format('YYYY-MM-DD');
+    const [year, month, day] = dateStr.split('-').map(Number);
+
+    return { year, month, day }
+}
+
 // function to calculate the difference between two date-time values
 export const calculateDifference = (start, end) => {
     const startDate = moment(start, 'MM/DD/YYYY HH:mm');

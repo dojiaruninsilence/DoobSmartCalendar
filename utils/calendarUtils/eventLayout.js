@@ -1,3 +1,5 @@
+import { separateDate } from "../dateTimeCalculations";
+
 export const calculateEventLayout = (events, startHour, totalHours) => {
     const endHour = startHour + totalHours;
 
@@ -55,5 +57,50 @@ export const calculateEventLayout = (events, startHour, totalHours) => {
         }
     });
 
-    return eventLayouts;
+    const numberOfColumns = columns.length;
+
+    return { eventLayouts, numberOfColumns };
+};
+
+export const calculateEventLayoutThreeDay = (events, currentDate) => {
+    const { year, month, day } = separateDate(currentDate);
+
+    const prevEvents = events.filter(event => (
+        event.start_date_year === year &&
+        event.start_date_month === month &&
+        event.start_date_day === (day - 1)
+    ));
+
+    const currentEvents = events.filter(event => (
+        event.start_date_year === year &&
+        event.start_date_month === month &&
+        event.start_date_day === (day)
+    ));
+
+    const nextEvents = events.filter(event => (
+        event.start_date_year === year &&
+        event.start_date_month === month &&
+        event.start_date_day === (day + 1)
+    ));
+
+    const {
+        eventLayouts: prevEventLayouts,
+        numberOfColumns: prevNumberOfColumns
+    } = calculateEventLayout(prevEvents, 0, 24);
+    
+    const {
+        eventLayouts: currentEventLayouts,
+        numberOfColumns: currentNumberOfColumns
+    } = calculateEventLayout(currentEvents, 0, 24);
+
+    const {
+        eventLayouts: nextEventLayouts,
+        numberOfColumns: nextNumberOfColumns
+    } = calculateEventLayout(nextEvents, 0, 24);
+
+    return {
+        prevEventLayouts, prevNumberOfColumns,
+        currentEventLayouts, currentNumberOfColumns,
+        nextEventLayouts, nextNumberOfColumns
+    };
 };

@@ -10,11 +10,11 @@ export const CalendarHalfDayView = ({ currentDate, startTime, events, navigation
     const startHour = startTime === 'AM' ? 0 : 12;
     const totalHours = 12;
     const hours = Array.from({ length: totalHours }, (_, i) => i + startHour);
-    const eventLayouts = calculateEventLayout(events, startHour, totalHours);
+    const { eventLayouts, numberOfColumns } = calculateEventLayout(events, startHour, totalHours);
 
     const renderEventBox = (event) => {
         const textColor = getTextColor(event.color);
-        const width = 90 / (eventLayouts.length > 3 ? 3 : eventLayouts.length);
+        const width = 90 / numberOfColumns;
 
         return (
             <TouchableOpacity

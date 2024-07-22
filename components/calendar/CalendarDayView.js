@@ -8,12 +8,12 @@ import { calculateEventLayout } from '../../utils/calendarUtils/eventLayout';
 export const CalendarDayView = ({ currentDate, events, onHalfDayClick, navigation }) => {
     const formattedDate = moment(currentDate).format('MMMM Do YYYY');
     const hours = Array.from({ length: 24 }, (_, i) => i);
-    const eventLayouts = calculateEventLayout(events, 0, 24);
+    const { eventLayouts, numberOfColumns } = calculateEventLayout(events, 0, 24);
 
     const renderEventBox = (event) => {
         const textColor = getTextColor(event.color);
 
-        const width = 90 / (eventLayouts.length > 3 ? 3 : eventLayouts.length);
+        const width = 90 / numberOfColumns;
         
         return (
             <TouchableOpacity

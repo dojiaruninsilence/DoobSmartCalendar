@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 
-export const CalendarWeekView = ({ currentDate, onDayClick }) => {
+export const CalendarWeekView = ({ currentDate, weekEvents, onDayClick, navigation }) => {
     const startOfWeek = moment(currentDate).startOf('week');
     const daysOfWeek = Array.from({ length: 7 }, (_, i) =>
         startOfWeek.clone().add(i, 'days')

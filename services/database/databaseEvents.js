@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import moment from 'moment';
 
 import { getDB, openDatabase } from "./database";
 import { modifyDateTime, formatDateTime, separateDateTime, calculateDifference } from '../../utils/dateTimeCalculations';
@@ -240,6 +241,43 @@ export const getEventsForDate = async (date) => {
     } catch (error) {
         return Promise.reject(`Error fetching events: ${error}`);
     }
+};
+
+export const getEventsForThreeDay = async (date) => {
+    const currentDate = (moment(date).format('YYYY-MM-DD'));
+    const prevDate = (moment(date).subtract(1, 'days').format('YYYY-MM-DD'));
+    const nextDate = (moment(date).add(1, 'days').format('YYYY-MM-DD'));
+
+    let events = [];
+
+    const prevEvents = await getEventsForDate(prevDate);
+    const currentEvents = await getEventsForDate(currentDate);
+    const nextEvents = await getEventsForDate(nextDate);
+
+    events = events.concat(prevEvents);
+    events = events.concat(currentEvents);
+    events = events.concat(nextEvents);
+
+    return events;
+};
+
+export const getEventsForWeek = async (date) => {
+    const startOfWeek = moment(date).startOf('week').format('YYYY-MM-DD');
+    const daysOfWeek = Array.from({ length: 7 }, (_, i) =>
+        startOfWeek.clone().add(i, 'days').format('YYYY-MM-DD')
+    );
+    let events = [];
+
+    for (const day of daysOfWeek) {
+        try {
+            const dayEvents = await getEventsForDate(day);
+            events = events.concat(dayEvents);
+        } catch (error) {
+            console.error(`Error fetching events for date ${day}: ${error}`);
+        }
+    }
+
+    return events;
 };
 
 export const getAllEvents = async () => {

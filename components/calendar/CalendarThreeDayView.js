@@ -1,25 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 
 import { getTextColor } from '../../utils/colors';
-import { calculateEventLayout } from '../../utils/calendarUtils/eventLayout';
+import { calculateEventLayout, calculateEventLayoutThreeDay } from '../../utils/calendarUtils/eventLayout';
 
-export const CalendarThreeDayView = ({ currentDate, events, prevEvents, nextEvents, onDayClick, navigation }) => {
+export const CalendarThreeDayView = ({ currentDate, events, onDayClick, navigation }) => {
     const formattedDate = moment(currentDate).format('MMMM Do YYYY');
+    const currDate = moment(currentDate);
     const prevDate = moment(currentDate).subtract(1, 'days');
     const nextDate = moment(currentDate).add(1, 'days');
 
     const dates = [prevDate, moment(currentDate), nextDate];
     const hours = Array.from({ length: 24 }, (_, i) => i);
     
-    const eventLayouts = calculateEventLayout(events, 0, 24);
-    const prevEventLayouts = calculateEventLayout(prevEvents, 0, 24);
-    const nextEventLayouts = calculateEventLayout(nextEvents, 0, 24);
-
-    const renderEventBox = (event) => {
+    const {
+        prevEventLayouts, prevNumberOfColumns,
+        currentEventLayouts, currentNumberOfColumns,
+        nextEventLayouts, nextNumberOfColumns
+    } = calculateEventLayoutThreeDay(events, currentDate);
+    
+    const renderEventBox = (event, numCol) => {
         const textColor = getTextColor(event.color);
-        const width = 90 / (eventLayouts.length > 3 ? 3 : eventLayouts.length);
+        const width = 90 / numCol;
 
         return (
             <TouchableOpacity
@@ -41,22 +44,72 @@ export const CalendarThreeDayView = ({ currentDate, events, prevEvents, nextEven
         );
     };
 
+    const pickDay = (index) => {
+        if (index === 0) {
+            return prevEventLayouts.map(event => renderEventBox(event, prevNumberOfColumns));
+        } else if (index === 1) {
+            return currentEventLayouts.map(event => renderEventBox(event, currentNumberOfColumns));
+        } else if (index === 2) {
+            return nextEventLayouts.map(event => renderEventBox(event, nextNumberOfColumns));
+        }
+    }
+
     return (
         <View style={styles.threeDayContainer}>
+            {/* <TouchableOpacity
+                key={prevDate}
+                style={styles.dayContainer}
+                onPress={() => onDayClick(date.toDate())}
+            >
+                
+                <Text style={styles.dateText}>{date.format('MMMM Do YYYY')}</Text>
+                <View style={styles.hoursContainer}>
+                    {hours.map((hour) => (
+                        <View key={hour} style={styles.hourMark}>
+                            <Text style={styles.hourText}>
+                                {moment({ hour }).format('h A')}
+                            </Text>
+                        </View>
+                    ))}
+                </View>
+                <View style={styles.eventsContainer}>
+                    {pickDay(index)}
+                </View>
+            </TouchableOpacity> */}
             {dates.map((date, index) => {
-                const dayEvents = events.filter(event =>
-                    moment(event.start_date).isSame(date, 'day')
-                );
+                // const [eventLayout, setEventLayout] = useState([]);
+                // const [numberOfColumn, setNumberOfColumn] = useState();
 
-                let eventLayout;
+                // const dayEvents = events.filter(event =>
+                //     moment(event.start_date).isSame(date, 'day')
+                // );
+
+                // let eventLayout;
+                // let numCol;
                 //const eventLayouts = calculateEventLayout(dayEvents, 0, 24);
-                if (index === 0) {
-                    eventLayout = prevEventLayouts;
-                } else if (index === 1) {
-                    eventLayout = eventLayouts;
-                } else if (index === 2) {
-                    eventLayout = nextEventLayouts;
-                }
+                // if (index === 0) {
+                //     setEventLayout(eventLayouts);
+                //     setNumberOfColumn(prevNumberOfColumns);
+                // } else if (index === 1) {
+                //     setEventLayout(eventLayouts);
+                //     setNumberOfColumn(numberOfColumns);
+                // } else if (index === 2) {
+                //     setEventLayout(eventLayouts);
+                //     setNumberOfColumn(nextNumberOfColumns);
+                // }
+
+                // useEffect(() => {
+                //     if (index === 0) {
+                //         setEventLayout(eventLayouts);
+                //         setNumberOfColumn(numberOfColumns);
+                //     } else if (index === 1) {
+                //         setEventLayout(eventLayouts);
+                //         setNumberOfColumn(numberOfColumns);
+                //     } else if (index === 2) {
+                //         setEventLayout(eventLayouts);
+                //         setNumberOfColumn(numberOfColumns);
+                //     }
+                // }, [index, eventLayouts, numberOfColumns]);
 
                 return (
                     <TouchableOpacity
@@ -76,7 +129,7 @@ export const CalendarThreeDayView = ({ currentDate, events, prevEvents, nextEven
                             ))}
                         </View>
                         <View style={styles.eventsContainer}>
-                            {eventLayout.map(event => renderEventBox(event))}
+                            {pickDay(index)}
                         </View>
                     </TouchableOpacity>
                 );
