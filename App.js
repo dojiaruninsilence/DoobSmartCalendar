@@ -3,6 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as Notifications from 'expo-notifications';
+import { requestPermissions } from './services/notifications/notifications';
 
 import { openDatabase, insertText, getLatestText } from './utils/testDatabase';
 import { BaseContainer } from './components/containers/BaseContainer';
@@ -15,8 +17,20 @@ import { ViewEventDetailPage } from './components/events/ViewEventDetailPage';
 import { EditEventDetailPage } from './components/events/EditEventDetailPage';
 import { MainNavigation } from './components/navigation/MainNavigation';
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 const Stack = createStackNavigator();
 
 export default function App() {
+  useEffect(() => {
+    requestPermissions();
+  }, []);
+  
   return <MainNavigation />; 
 }

@@ -12,6 +12,7 @@ import { DateTimeInput } from '../inputs/DateTimeInput';
 import { DurationInput } from '../inputs/DurationInput';
 import { BaseLargeTextInputBox } from '../inputs/BaseLargeTextInputBox';
 import { BaseMidTextInputBox } from '../inputs/BaseMidTextInputBox';
+import { scheduleNotification } from '../../services/notifications/notifications';
 
 export const AddEventPage = ({ navigation }) => {
     const [title, setTitle] = useState('');
@@ -44,37 +45,41 @@ export const AddEventPage = ({ navigation }) => {
     const [color, setColor] = useState('');
 
     const handleAddEvent = async () => {
+        const event = {
+            title,
+            description,
+            notes,
+            start_time_hour: parseInt(startHour),
+            start_time_minute: parseInt(startMinute),
+            start_date_month: parseInt(startMonth),
+            start_date_day: parseInt(startDay),
+            start_date_year: parseInt(startYear),
+            end_time_hour: parseInt(endHour),
+            end_time_minute: parseInt(endMinute),
+            end_date_month: parseInt(endMonth),
+            end_date_day: parseInt(endDay),
+            end_date_year: parseInt(endYear),
+            duration_days: parseInt(durationDays),
+            duration_hours: parseInt(durationHours),
+            duration_minutes: parseInt(durationMinutes),
+            importance: parseInt(importance),
+            deadline_time_hour: parseInt(deadlineHour),
+            deadline_time_minute: parseInt(deadlineMinute),
+            deadline_date_month: parseInt(deadlineMonth),
+            deadline_date_day: parseInt(deadlineDay),
+            deadline_date_year: parseInt(deadlineYear),
+            is_repeating: isRepeating,
+            number_repeats: numberRepeats,
+            is_main_event: isMainEvent,
+            is_sub_event: isSubEvent,
+            main_event: mainEvent,
+            color
+        };
+
         try {
-            await addEvent({
-                title,
-                description,
-                notes,
-                start_time_hour: parseInt(startHour),
-                start_time_minute: parseInt(startMinute),
-                start_date_month: parseInt(startMonth),
-                start_date_day: parseInt(startDay),
-                start_date_year: parseInt(startYear),
-                end_time_hour: parseInt(endHour),
-                end_time_minute: parseInt(endMinute),
-                end_date_month: parseInt(endMonth),
-                end_date_day: parseInt(endDay),
-                end_date_year: parseInt(endYear),
-                duration_days: parseInt(durationDays),
-                duration_hours: parseInt(durationHours),
-                duration_minutes: parseInt(durationMinutes),
-                importance: parseInt(importance),
-                deadline_time_hour: parseInt(deadlineHour),
-                deadline_time_minute: parseInt(deadlineMinute),
-                deadline_date_month: parseInt(deadlineMonth),
-                deadline_date_day: parseInt(deadlineDay),
-                deadline_date_year: parseInt(deadlineYear),
-                is_repeating: isRepeating,
-                number_repeats: numberRepeats,
-                is_main_event: isMainEvent,
-                is_sub_event: isSubEvent,
-                main_event: mainEvent,
-                color
-            });
+            await addEvent(event);
+            await scheduleNotification(event);
+            
             Alert.alert("Success", "Event added successfully");
         } catch (error) {
             Alert.alert("Error", `Failed to add event: ${error}`);
