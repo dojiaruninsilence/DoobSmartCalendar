@@ -56,61 +56,7 @@ export const CalendarThreeDayView = ({ currentDate, events, onDayClick, navigati
 
     return (
         <View style={styles.threeDayContainer}>
-            {/* <TouchableOpacity
-                key={prevDate}
-                style={styles.dayContainer}
-                onPress={() => onDayClick(date.toDate())}
-            >
-                
-                <Text style={styles.dateText}>{date.format('MMMM Do YYYY')}</Text>
-                <View style={styles.hoursContainer}>
-                    {hours.map((hour) => (
-                        <View key={hour} style={styles.hourMark}>
-                            <Text style={styles.hourText}>
-                                {moment({ hour }).format('h A')}
-                            </Text>
-                        </View>
-                    ))}
-                </View>
-                <View style={styles.eventsContainer}>
-                    {pickDay(index)}
-                </View>
-            </TouchableOpacity> */}
             {dates.map((date, index) => {
-                // const [eventLayout, setEventLayout] = useState([]);
-                // const [numberOfColumn, setNumberOfColumn] = useState();
-
-                // const dayEvents = events.filter(event =>
-                //     moment(event.start_date).isSame(date, 'day')
-                // );
-
-                // let eventLayout;
-                // let numCol;
-                //const eventLayouts = calculateEventLayout(dayEvents, 0, 24);
-                // if (index === 0) {
-                //     setEventLayout(eventLayouts);
-                //     setNumberOfColumn(prevNumberOfColumns);
-                // } else if (index === 1) {
-                //     setEventLayout(eventLayouts);
-                //     setNumberOfColumn(numberOfColumns);
-                // } else if (index === 2) {
-                //     setEventLayout(eventLayouts);
-                //     setNumberOfColumn(nextNumberOfColumns);
-                // }
-
-                // useEffect(() => {
-                //     if (index === 0) {
-                //         setEventLayout(eventLayouts);
-                //         setNumberOfColumn(numberOfColumns);
-                //     } else if (index === 1) {
-                //         setEventLayout(eventLayouts);
-                //         setNumberOfColumn(numberOfColumns);
-                //     } else if (index === 2) {
-                //         setEventLayout(eventLayouts);
-                //         setNumberOfColumn(numberOfColumns);
-                //     }
-                // }, [index, eventLayouts, numberOfColumns]);
-
                 return (
                     <TouchableOpacity
                         key={date}

@@ -104,3 +104,47 @@ export const calculateEventLayoutThreeDay = (events, currentDate) => {
         nextEventLayouts, nextNumberOfColumns
     };
 };
+
+export const calculateEventLayoutWeek = (events, date) => {
+    const { year, month, day } = separateDate(date);
+    const startHour = 0;
+    const totalHours = 24; // Total hours in a day
+    const endHour = startHour + totalHours;
+
+    // filter events based on date
+    events = events.filter(event => (
+        event.start_date_year === year &&
+        event.start_date_month === month &&
+        event.start_date_day === day
+    ));
+
+    // adjust event times to fit within the scope
+    events = events.map(event => {
+        const adjustedEvent = { ...event };
+        if (adjustedEvent.start_time_hour < startHour) {
+            adjustedEvent.start_time_hour = startHour;
+            adjustedEvent.start_time_minute = 0;
+        }
+        if (adjustedEvent.end_time_hour > endHour) {
+            adjustedEvent.end_time_hour = endHour;
+            adjustedEvent.end_time_minute = 0;
+        }
+        return adjustedEvent;
+    });
+
+    // sort event by start time
+    events.sort((a, b) => {
+        if (a.start_time_hour !== b.start_time_hour) {
+            return a.start_time_hour - b.start_time_hour;
+        }
+        return a.start_time_minute - b.start_time_minute;
+    });
+
+    const eventLayouts = events.map(event => ({
+        ...event,
+        left: ((event.start_time_hour * 60 + event.start_time_minute) - (startHour * 60)) / (totalHours * 60) * 100,
+        width: ((event.end_time_hour * 60 + event.end_time_minute) - (event.start_time_hour * 60 + event.start_time_minute)) / (totalHours * 60) * 100,
+    }));
+
+    return eventLayouts;
+};

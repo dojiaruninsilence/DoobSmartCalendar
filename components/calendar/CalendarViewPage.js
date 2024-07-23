@@ -108,7 +108,7 @@ export const CalendarViewPage = ({ navigation }) => {
             case 'week':
                 return <CalendarWeekView
                     currentDate={currentDate}
-                    weekEvents={weekEvents}
+                    events={weekEvents}
                     onDayClick={handleDayClick}
                     navigation={navigation}
                 />;

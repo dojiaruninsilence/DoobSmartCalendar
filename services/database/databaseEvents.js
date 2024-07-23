@@ -232,6 +232,8 @@ export const getEventsForDate = async (date) => {
         return Promise.reject("Database is not initialized");
     }
 
+    date = moment(date).format('YYYY-MM-DD');
+
     try {
         const events = await db.getAllAsync(
             'SELECT * FROM Events WHERE start_date_year = ? AND start_date_month = ? AND start_date_day = ?',
@@ -262,9 +264,15 @@ export const getEventsForThreeDay = async (date) => {
 };
 
 export const getEventsForWeek = async (date) => {
-    const startOfWeek = moment(date).startOf('week').format('YYYY-MM-DD');
+    const startOfWeek = moment(date).startOf('week');
+
+    if (!startOfWeek.isValid()) {
+        console.warn('Invalid startOfWeek date');
+        return null;
+    }
+
     const daysOfWeek = Array.from({ length: 7 }, (_, i) =>
-        startOfWeek.clone().add(i, 'days').format('YYYY-MM-DD')
+        startOfWeek.clone().add(i, 'days')
     );
     let events = [];
 
