@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
+import { calculateEventLayoutMonthDay, calculateEventLayoutMonthHour } from '../../utils/calendarUtils/eventLayout';
 
-export const CalendarMonthView = ({ currentDate, onDayClick }) => {
+export const CalendarMonthView = ({ currentDate, events, onDayClick, navigation }) => {
     const startOfMonth = moment(currentDate).startOf('month');
     const endOfMonth = moment(currentDate).endOf('month');
     const startDayOfMonth = startOfMonth.day();
@@ -27,6 +28,18 @@ export const CalendarMonthView = ({ currentDate, onDayClick }) => {
         weeks.push(days.splice(0, 7));
     }
 
+    const renderEventBox = (event) => {
+        return (
+            <View
+                key={event.id}
+                style={[
+                    styles.eventBox,
+                    { backgroundColor: event.color, opacity: 0.3 }
+                ]}
+            />
+        );
+    };
+
     return (
         <View style={styles.monthContainer}>
             <Text style={styles.monthYearText}>{startOfMonth.format('MMMM YYYY')}</Text>
@@ -36,6 +49,8 @@ export const CalendarMonthView = ({ currentDate, onDayClick }) => {
                     if (day) {
                         const dateFormatted = day.format('DD');
                         const isToday = day.isSame(currentDate, 'day');
+
+                        const dayEvents = calculateEventLayoutMonthDay(events, day);
                         return (
                             <TouchableOpacity
                             key={dayIndex}
@@ -43,6 +58,17 @@ export const CalendarMonthView = ({ currentDate, onDayClick }) => {
                             onPress={() => onDayClick(day.toDate())}
                             >
                                 <Text style={styles.dayDateText}>{dateFormatted}</Text>
+                                <View style={styles.hoursContainer}>
+                                    {Array.from({ length: 24 }, (_, hourIndex) => {
+                                        const eventLayouts = calculateEventLayoutMonthHour(dayEvents, hourIndex);
+                                        
+                                        return (
+                                            <View key={hourIndex} style={styles.hourBox}>
+                                                {eventLayouts.map(event => renderEventBox(event))}
+                                            </View>
+                                        );
+                                    })}
+                                </View>
                             </TouchableOpacity>
                         );
                     } else {
@@ -82,6 +108,7 @@ const styles = StyleSheet.create({
     },
     dayDateText: {
         fontSize: 16,
+        zIndex: 2,
     },
     emptyBox: {
         flex: 1,
@@ -89,5 +116,26 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         marginHorizontal: 2,
         opacity: 0,
+    },
+    hoursContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        zIndex: 1,
+    },
+    hourBox: {
+        width: '16.5%',
+        height: '25%',
+    },
+    eventBox: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
     },
 });

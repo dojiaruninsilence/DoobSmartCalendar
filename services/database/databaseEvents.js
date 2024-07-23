@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import moment from 'moment';
 
 import { getDB, openDatabase } from "./database";
-import { modifyDateTime, formatDateTime, separateDateTime, calculateDifference } from '../../utils/dateTimeCalculations';
+import { modifyDateTime, formatDateTime, separateDateTime, calculateDifference, separateDate } from '../../utils/dateTimeCalculations';
 
 // ensure that the database is opened and initialized
 (async () => {
@@ -287,6 +287,26 @@ export const getEventsForWeek = async (date) => {
 
     return events;
 };
+
+export const getEventsForMonth = async (date) => {
+    const { year, month, day } = separateDate(date);
+
+    await ensureDBInitialized();
+
+    if (!db) {
+        return Promise.reject("Database is not initialized");
+    }
+
+    try {
+        const events = await db.getAllAsync(
+            'SELECT * FROM Events WHERE start_date_year = ? AND start_date_month = ?',
+            [year, month]
+        );
+        return events;
+    } catch (error) {
+        return Promise.reject(`Error fetching events: ${error}`);
+    }
+}
 
 export const getAllEvents = async () => {
     await ensureDBInitialized();

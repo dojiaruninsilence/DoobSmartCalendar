@@ -9,7 +9,7 @@ import { CalendarThreeDayView } from "./CalendarThreeDayView";
 import { CalendarWeekView } from "./CalendarWeekView";
 import { CalendarMonthView } from "./CalendarMonthView";
 import { CalendarYearView } from "./CalenderYearView";
-import { getEventsForDate, getEventsForThreeDay, getEventsForWeek } from "../../services/database/databaseEvents";
+import { getEventsForDate, getEventsForMonth, getEventsForThreeDay, getEventsForWeek } from "../../services/database/databaseEvents";
 
 export const CalendarViewPage = ({ navigation }) => {
     const [zoomLevel, setZoomLevel] = useState('day');
@@ -18,6 +18,7 @@ export const CalendarViewPage = ({ navigation }) => {
     const [events, setEvents] = useState([]);
     const [threeDayEvents, setThreeDayEvents] = useState([]);
     const [weekEvents, setWeekEvents] = useState([]);
+    const [monthEvents, setMonthEvents] = useState([]);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -28,6 +29,8 @@ export const CalendarViewPage = ({ navigation }) => {
             setThreeDayEvents(fetchedEvents);
             fetchedEvents = await getEventsForWeek(dateStr);
             setWeekEvents(fetchedEvents);
+            fetchedEvents = await getEventsForMonth(dateStr);
+            setMonthEvents(fetchedEvents);
         };
 
         fetchEvents();
@@ -113,7 +116,12 @@ export const CalendarViewPage = ({ navigation }) => {
                     navigation={navigation}
                 />;
             case 'month':
-                return <CalendarMonthView currentDate={currentDate} onDayClick={handleDayClick} />;
+                return <CalendarMonthView
+                    currentDate={currentDate}
+                    events={monthEvents}
+                    onDayClick={handleDayClick}
+                    navigation={navigation}
+                />;
             case 'year':
                 return <CalendarYearView currentDate={currentDate} onMonthClick={handleDayClick} />;
             default:

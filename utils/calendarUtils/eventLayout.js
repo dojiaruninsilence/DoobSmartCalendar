@@ -148,3 +148,30 @@ export const calculateEventLayoutWeek = (events, date) => {
 
     return eventLayouts;
 };
+
+export const calculateEventLayoutMonthDay = (events, date) => {
+    const { year, month, day } = separateDate(date);
+
+    // filter events based on date
+    const dayEvents = events.filter(event => (
+        event.start_date_year === year &&
+        event.start_date_month === month &&
+        event.start_date_day === day
+    ));
+
+    return dayEvents;
+};
+
+export const calculateEventLayoutMonthHour = (dayEvents, hour) => {
+    const startHour = hour;
+    const endHour = hour + 1;
+
+    const eventLayouts = dayEvents.filter(event =>
+        (event.start_time_hour >= startHour && event.start_time_hour < endHour) || // Event starts within the hour range
+        (event.end_time_hour > startHour && event.end_time_hour <= endHour) || // Event ends within the hour range
+        (event.start_time_hour < startHour && event.end_time_hour > endHour) || // Event spans across the hour range
+        (event.start_time_hour < endHour && event.end_time_hour > startHour) // Event spans across multiple hours    
+    );
+
+    return eventLayouts;
+};
