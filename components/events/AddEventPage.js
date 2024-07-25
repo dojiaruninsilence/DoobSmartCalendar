@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, ScrollView, Switch, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, Alert, ScrollView, Switch, StyleSheet, Button } from 'react-native';
+import { useAssets } from 'expo-asset';
+import { Audio } from 'expo-av';
 
 import { BaseButton } from '../buttons/BaseButton';
 import { BaseContainer } from '../containers/BaseContainer';
@@ -44,6 +46,22 @@ export const AddEventPage = ({ navigation }) => {
     const [mainEvent, setMainEvent] = useState('');
     const [color, setColor] = useState('');
 
+    const [soundUri, setSoundUri] = useState('');
+    const [sound, setSound] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const [assets, error] = useAssets([require('../../assets/sounds/battle_ram_001.mp3')]);
+
+    useEffect(() => {
+        if (assets) {
+            setSoundUri(assets[0].localUri);
+            setLoading(false);
+        } else if (error) {
+            console.error('Error loading assets:', error);
+            setLoading(false);
+        }
+    }, [assets, error]);
+
     const handleAddEvent = async () => {
         const event = {
             title,
@@ -78,11 +96,23 @@ export const AddEventPage = ({ navigation }) => {
 
         try {
             await addEvent(event);
-            await scheduleNotification(event);
+            if (soundUri) {
+                await scheduleNotification(event, soundUri);
+            }
             
             Alert.alert("Success", "Event added successfully");
         } catch (error) {
             Alert.alert("Error", `Failed to add event: ${error}`);
+        }
+    };
+
+    const handlePlaySound = async () => {
+        if (soundUri) {
+            const { sound } = await Audio.Sound.createAsync({ uri: soundUri });
+            setSound(sound);
+            await sound.playAsync();
+        } else {
+            Alert.alert('Error', 'No sound file available.');
         }
     };
 

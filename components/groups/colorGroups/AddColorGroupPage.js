@@ -6,6 +6,7 @@ import { BaseContainer } from '../../containers/BaseContainer';
 import { BaseTextBox } from '../../text/BaseTextBox';
 import { BaseTextInputBox } from '../../inputs/BaseTextInputBox';
 import { addColorGroup } from '../../../services/database/databaseColorGroups';
+import { ColorPickerInput } from '../../inputs/ColorPickerInput';
 
 export const AddColorGroupPage = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -36,11 +37,7 @@ export const AddColorGroupPage = ({ navigation }) => {
                 onChangeText={setName}
                 placeholder="Name"
             />
-            <BaseTextInputBox
-                value={hexColor}
-                onChangeText={setHexColor}
-                placeholder="Hexidecimal Color"
-            />
+            <ColorPickerInput onColorSelected={setHexColor} />
             <BaseTextInputBox
                 value={notes}
                 onChangeText={setNotes}
