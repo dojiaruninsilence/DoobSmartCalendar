@@ -10,6 +10,7 @@ import { CalendarWeekView } from "./CalendarWeekView";
 import { CalendarMonthView } from "./CalendarMonthView";
 import { CalendarYearView } from "./CalenderYearView";
 import { getEventsForDate, getEventsForMonth, getEventsForThreeDay, getEventsForWeek } from "../../services/database/databaseEvents";
+import { getAllColorGroups } from "../../services/database/databaseColorGroups";
 
 export const CalendarViewPage = ({ navigation }) => {
     const [zoomLevel, setZoomLevel] = useState('day');
@@ -19,6 +20,7 @@ export const CalendarViewPage = ({ navigation }) => {
     const [threeDayEvents, setThreeDayEvents] = useState([]);
     const [weekEvents, setWeekEvents] = useState([]);
     const [monthEvents, setMonthEvents] = useState([]);
+    const [colorGroups, setColorGroups] = useState([]);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -33,7 +35,14 @@ export const CalendarViewPage = ({ navigation }) => {
             setMonthEvents(fetchedEvents);
         };
 
+        const fetchColorGroups = async () => {
+            const fetchedColorGroups = await getAllColorGroups();
+            setColorGroups(fetchedColorGroups);
+            // console.log(colorGroups);
+        };
+
         fetchEvents();
+        fetchColorGroups();
     }, [currentDate]);
 
     const handleGesture = ({ nativeEvent }) => {
@@ -112,6 +121,7 @@ export const CalendarViewPage = ({ navigation }) => {
                 return <CalendarWeekView
                     currentDate={currentDate}
                     events={weekEvents}
+                    colorGroups={colorGroups}
                     onDayClick={handleDayClick}
                     navigation={navigation}
                 />;
@@ -119,6 +129,7 @@ export const CalendarViewPage = ({ navigation }) => {
                 return <CalendarMonthView
                     currentDate={currentDate}
                     events={monthEvents}
+                    colorGroups={colorGroups}
                     onDayClick={handleDayClick}
                     navigation={navigation}
                 />;

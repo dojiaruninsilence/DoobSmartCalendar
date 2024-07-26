@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import { calculateEventLayoutMonthDay, calculateEventLayoutMonthHour } from '../../utils/calendarUtils/eventLayout';
+import { ScrollView } from 'react-native-gesture-handler';
 
-export const CalendarMonthView = ({ currentDate, events, onDayClick, navigation }) => {
+export const CalendarMonthView = ({ currentDate, events, colorGroups, onDayClick, navigation }) => {
     const startOfMonth = moment(currentDate).startOf('month');
     const endOfMonth = moment(currentDate).endOf('month');
     const startDayOfMonth = startOfMonth.day();
@@ -40,48 +41,73 @@ export const CalendarMonthView = ({ currentDate, events, onDayClick, navigation 
         );
     };
 
-    return (
-        <View style={styles.monthContainer}>
-            <Text style={styles.monthYearText}>{startOfMonth.format('MMMM YYYY')}</Text>
-            {weeks.map((week, weekIndex) => (
-                <View key={weekIndex} style={styles.weekRow}>
-                {week.map((day, dayIndex) => {
-                    if (day) {
-                        const dateFormatted = day.format('DD');
-                        const isToday = day.isSame(currentDate, 'day');
+    // extract unique color groups used in the current month's events
+    const usedColorGroups = [];
+    events.forEach(event => {
+        const colorGroup = colorGroups.find(group => group.hex_color === event.color);
+        // console.log(colorGroup);
+        if (colorGroup && !usedColorGroups.includes(colorGroup)) {
+            usedColorGroups.push(colorGroup);
+            // console.log(`added color group: ${colorGroup}`);
+        }
+    });
 
-                        const dayEvents = calculateEventLayoutMonthDay(events, day);
-                        return (
-                            <TouchableOpacity
-                            key={dayIndex}
-                            style={[styles.dayBox, isToday && styles.highlightedBox]}
-                            onPress={() => onDayClick(day.toDate())}
-                            >
-                                <Text style={styles.dayDateText}>{dateFormatted}</Text>
-                                <View style={styles.hoursContainer}>
-                                    {Array.from({ length: 24 }, (_, hourIndex) => {
-                                        const eventLayouts = calculateEventLayoutMonthHour(dayEvents, hourIndex);
-                                        
-                                        return (
-                                            <View key={hourIndex} style={styles.hourBox}>
-                                                {eventLayouts.map(event => renderEventBox(event))}
-                                            </View>
-                                        );
-                                    })}
-                                </View>
-                            </TouchableOpacity>
-                        );
-                    } else {
-                        return <View key={dayIndex} style={styles.emptyBox} />;
-                    }
-                })}
-                </View>
-            ))}
-        </View>
+    return (
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.monthContainer}>
+                <Text style={styles.monthYearText}>{startOfMonth.format('MMMM YYYY')}</Text>
+                {weeks.map((week, weekIndex) => (
+                    <View key={weekIndex} style={styles.weekRow}>
+                    {week.map((day, dayIndex) => {
+                        if (day) {
+                            const dateFormatted = day.format('DD');
+                            const isToday = day.isSame(currentDate, 'day');
+
+                            const dayEvents = calculateEventLayoutMonthDay(events, day);
+                            return (
+                                <TouchableOpacity
+                                key={dayIndex}
+                                style={[styles.dayBox, isToday && styles.highlightedBox]}
+                                onPress={() => onDayClick(day.toDate())}
+                                >
+                                    <Text style={styles.dayDateText}>{dateFormatted}</Text>
+                                    <View style={styles.hoursContainer}>
+                                        {Array.from({ length: 24 }, (_, hourIndex) => {
+                                            const eventLayouts = calculateEventLayoutMonthHour(dayEvents, hourIndex);
+                                            
+                                            return (
+                                                <View key={hourIndex} style={styles.hourBox}>
+                                                    {eventLayouts.map(event => renderEventBox(event))}
+                                                </View>
+                                            );
+                                        })}
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        } else {
+                            return <View key={dayIndex} style={styles.emptyBox} />;
+                        }
+                    })}
+                    </View>
+                ))}
+            </View>
+            <View style={styles.colorKeyContainer}>
+                {usedColorGroups.map(group => (
+                    <View key={group.id} style={styles.colorGroup}>
+                        <View style={[styles.colorBox, { backgroundColor: group.hex_color }]} />
+                        <Text style={styles.colorName}>{group.name}</Text>
+                        <Text style={styles.colorDescription}>{group.description}</Text>
+                    </View>
+                ))}
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+    },
     monthContainer: {
         width: '90%',
         height: '80%',
@@ -137,5 +163,31 @@ const styles = StyleSheet.create({
         left: 0,
         bottom: 0,
         right: 0,
+    },
+    colorKeyContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 10,
+        marginTop: 10,
+        width: '100%',
+        height: 800, // need to fix this look at week
+    },
+    colorGroup: {
+        flexDirection: 'row',
+        width: '100%',
+        margin: 5,
+        alignItems: 'center',
+    },
+    colorBox: {
+        width: 20,
+        height: 20,
+        marginBottom: 5,
+    },
+    colorName: {
+        marginLeft: 10,
+        fontWeight: 'bold',
+    },
+    colorDescription: {
+        fontStyle: 'italic',
     },
 });

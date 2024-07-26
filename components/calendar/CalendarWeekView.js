@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import { calculateEventLayoutWeek } from '../../utils/calendarUtils/eventLayout';
+import { ScrollView } from 'react-native-gesture-handler';
 
-export const CalendarWeekView = ({ currentDate, events, onDayClick, navigation }) => {
+export const CalendarWeekView = ({ currentDate, events, colorGroups, onDayClick, navigation }) => {
     const startOfWeek = moment(currentDate).startOf('week');
 
     if (!startOfWeek.isValid()) {
@@ -34,34 +35,59 @@ export const CalendarWeekView = ({ currentDate, events, onDayClick, navigation }
         );
     };
 
+    // extract unique color groups used in the currents week's events
+    const usedColorGroups = [];
+    events.forEach(event => {
+        const colorGroup = colorGroups.find(group => group.hex_color === event.color);
+        // console.log(colorGroup);
+        if (colorGroup && !usedColorGroups.includes(colorGroup)) {
+            usedColorGroups.push(colorGroup);
+            // console.log(`added color group: ${colorGroup}`);
+        }
+    });
+
     return (
-        <View style={styles.weekContainer}>
-        {daysOfWeek.map((day, index) => {
-            const dayFormatted = day.format('dddd');
-            const dateFormatted = day.format('MM/DD/YY');
-            const isToday = day.isSame(currentDate, 'day');
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.weekContainer}>
+            {daysOfWeek.map((day, index) => {
+                const dayFormatted = day.format('dddd');
+                const dateFormatted = day.format('MM/DD/YY');
+                const isToday = day.isSame(currentDate, 'day');
 
-            const eventLayouts = calculateEventLayoutWeek(events, day);
+                const eventLayouts = calculateEventLayoutWeek(events, day);
 
-            return (
-            <TouchableOpacity
-                key={index}
-                style={[styles.weekBox, isToday && styles.highlightedBox]}
-                onPress={() => onDayClick(day.toDate())}
-            >
-                <Text style={styles.weekDayText}>{dayFormatted}</Text>
-                <Text style={styles.weekDateText}>{dateFormatted}</Text>
-                <View style={styles.eventsContainer}>
-                    {eventLayouts.map(event => renderEventBox(event))}
-                </View>
-            </TouchableOpacity>
-            );
-        })}
-        </View>
+                return (
+                <TouchableOpacity
+                    key={index}
+                    style={[styles.weekBox, isToday && styles.highlightedBox]}
+                    onPress={() => onDayClick(day.toDate())}
+                >
+                    <Text style={styles.weekDayText}>{dayFormatted}</Text>
+                    <Text style={styles.weekDateText}>{dateFormatted}</Text>
+                    <View style={styles.eventsContainer}>
+                        {eventLayouts.map(event => renderEventBox(event))}
+                    </View>
+                </TouchableOpacity>
+                );
+            })}
+            </View>
+            <View style={styles.colorKeyContainer}>
+                {usedColorGroups.map(group => (
+                    <View key={group.id} style={styles.colorGroup}>
+                        <View style={[styles.colorBox, { backgroundColor: group.hex_color }]} />
+                        <Text style={styles.colorName}>{group.name}</Text>
+                        <Text style={styles.colorDescription}>{group.description}</Text>
+                    </View>
+                ))}
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+    },
     weekContainer: {
         width: '90%',
         height: '80%',
@@ -73,6 +99,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginVertical: 2,
+        width: '100%'
     },
     highlightedBox: {
         backgroundColor: '#e0e0e0', // Highlight the current date box
@@ -98,5 +125,33 @@ const styles = StyleSheet.create({
         padding: 4,
         zIndex: 3,
         height: 20,
+    },
+    colorKeyContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 10,
+        //justifyContent: 'center',
+        //alignItems: 'center',
+        marginTop: 10,
+        width: '100%',
+        height: 800, // need to make this automatic dont know why it isnt adjusting height as items added
+    },
+    colorGroup: {
+        flexDirection: 'row',
+        width: '100%',
+        margin: 5,
+        alignItems: 'center',
+    },
+    colorBox: {
+        width: 20,
+        height: 20,
+        marginBottom: 5,
+    },
+    colorName: {
+        marginLeft: 10,
+        fontWeight: 'bold',
+    },
+    colorDescription: {
+        fontStyle: 'italic',
     },
 });
