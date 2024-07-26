@@ -49,6 +49,7 @@ export const ViewEventDetailPage = ({ route, navigation }) => {
             <Text style={styles.detailText}>Start Time: {formatDateTime(event.start_date_year, event.start_date_month, event.start_date_day, event.start_time_hour, event.start_time_minute)}</Text>
             <Text style={styles.detailText}>End Time: {formatDateTime(event.end_date_year, event.end_date_month, event.end_date_day, event.end_time_hour, event.end_time_minute)}</Text>
             <Text style={styles.detailText}>Deadline: {formatDateTime(event.deadline_date_year, event.deadline_date_month, event.deadline_date_day, event.deadline_time_hour, event.deadline_time_minute)}</Text>
+            <Text style={styles.detailText}>Color: {event.color}</Text>
             <Text style={styles.detailText}>Importance: {event.importance}</Text>
             <Text style={styles.detailText}>Repeating: {event.is_repeating ? 'Yes' : 'No'}</Text>
             <Text style={styles.detailText}>Main Event: {event.is_main_event ? 'Yes' : 'No'}</Text>

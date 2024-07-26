@@ -8,7 +8,7 @@ import { BaseTextInputBox } from '../../inputs/BaseTextInputBox';
 import { addColorGroup } from '../../../services/database/databaseColorGroups';
 import { ColorPickerInput } from '../../inputs/ColorPickerInput';
 
-export const AddColorGroupPage = ({ navigation }) => {
+export const AddColorGroupPage = ({ navigation, route }) => {
     const [name, setName] = useState('');
     const [hexColor, setHexColor] = useState('');
     const [notes, setNotes] = useState('');
@@ -23,6 +23,16 @@ export const AddColorGroupPage = ({ navigation }) => {
                 description
             });
             Alert.alert("Success", "Color group added succesfully");
+
+            navigation.navigate('AddEvent', {
+                ...route.params,
+                newColorGroup: {
+                    name,
+                    hex_color: hexColor,
+                    notes,
+                    description
+                }
+            });
         } catch (error) {
             Alert.alert("Error", `Failed to add color group: ${error}`);
         }

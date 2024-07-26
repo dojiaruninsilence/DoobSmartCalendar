@@ -22,6 +22,7 @@ export const ColorPickerInput = ({ onColorSelected }) => {
             <View style={styles.sliderContainer}>
                 <Text>Red: {red}</Text>
                 <Slider
+                    step={1}
                     style={styles.slider}
                     minimumValue={0}
                     maximumValue={255}
@@ -37,6 +38,7 @@ export const ColorPickerInput = ({ onColorSelected }) => {
             <View style={styles.sliderContainer}>
                 <Text>Green: {green}</Text>
                 <Slider
+                    step={1}
                     style={styles.slider}
                     minimumValue={0}
                     maximumValue={255}
@@ -52,6 +54,7 @@ export const ColorPickerInput = ({ onColorSelected }) => {
             <View style={styles.sliderContainer}>
                 <Text>Blue: {blue}</Text>
                 <Slider
+                    step={1}
                     style={styles.slider}
                     minimumValue={0}
                     maximumValue={255}

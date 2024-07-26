@@ -8,6 +8,7 @@ import { BaseContainer } from '../containers/BaseContainer';
 import { BaseTextBox } from '../text/BaseTextBox';
 import { BaseTextInputBox } from '../inputs/BaseTextInputBox';
 import { addEvent } from '../../services/database/databaseEvents';
+import { getAllColorGroups } from '../../services/database/databaseColorGroups';
 import { DateInput } from '../inputs/DateInput';
 import { TimeInput } from '../inputs/TimeInput';
 import { DateTimeInput } from '../inputs/DateTimeInput';
@@ -15,8 +16,9 @@ import { DurationInput } from '../inputs/DurationInput';
 import { BaseLargeTextInputBox } from '../inputs/BaseLargeTextInputBox';
 import { BaseMidTextInputBox } from '../inputs/BaseMidTextInputBox';
 import { scheduleNotification } from '../../services/notifications/notifications';
+import { BaseDropDownInput } from '../inputs/BaseDropDownInput';
 
-export const AddEventPage = ({ navigation }) => {
+export const AddEventPage = ({ navigation, route }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [notes, setNotes] = useState('');
@@ -46,6 +48,8 @@ export const AddEventPage = ({ navigation }) => {
     const [mainEvent, setMainEvent] = useState('');
     const [color, setColor] = useState('');
 
+    const [colorGroups, setColorGroups] = useState([]);
+
     const [soundUri, setSoundUri] = useState('');
     const [sound, setSound] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -61,6 +65,23 @@ export const AddEventPage = ({ navigation }) => {
             setLoading(false);
         }
     }, [assets, error]);
+
+    useEffect(() => {
+        const fetchColorGroups = async () => {
+            try {
+                const groups = await getAllColorGroups();
+                const options = groups.map(group => ({
+                    label: group.name,
+                    value: group.hex_color
+                }));
+                setColorGroups(options);
+            } catch (error) {
+                console.error('Error fetching color groups:', error);
+            }
+        };
+
+        fetchColorGroups();
+    }, [route.params?.newColorGroup]);
 
     const handleAddEvent = async () => {
         const event = {
@@ -101,6 +122,8 @@ export const AddEventPage = ({ navigation }) => {
             }
             
             Alert.alert("Success", "Event added successfully");
+
+            navigation.goBack();
         } catch (error) {
             Alert.alert("Error", `Failed to add event: ${error}`);
         }
@@ -115,6 +138,54 @@ export const AddEventPage = ({ navigation }) => {
             Alert.alert('Error', 'No sound file available.');
         }
     };
+
+    const handleColorChange = (value) => {
+        if (value === 'create_new') {
+            navigation.navigate('AddColorGroup', {
+                previousPage: 'AddEventPage',
+                // pass the current field values to the color group page
+                title,
+                description,
+                notes,
+                startHour,
+                startMinute,
+                startMonth,
+                startDay,
+                startYear,
+                endHour,
+                endMinute,
+                endMonth,
+                endDay,
+                endYear,
+                durationDays,
+                durationHours,
+                durationMinutes,
+                importance,
+                deadlineHour,
+                deadlineMinute,
+                deadlineMonth,
+                deadlineDay,
+                deadlineYear,
+                isRepeating,
+                numberRepeats,
+                isMainEvent,
+                isSubEvent,
+                mainEvent,
+                color
+            });
+        } else {
+            setColor(value);
+        }
+    };
+
+    useEffect(() => {
+        // check if new color group was added and passed via navigation params
+        if (route.params?.newColorGroup) {
+            const { newColorGroup } = route.params;
+            setColorGroups(prevColorGroups => [...prevColorGroups, newColorGroup]);
+            setColor(newColorGroup.name);
+        }
+    }, [route.params?.newColorGroup]);
 
     return (
         <View style={styles.container}>
@@ -203,10 +274,16 @@ export const AddEventPage = ({ navigation }) => {
                     placeholder="Importance (1-10)"
                     keyboardType="numeric"
                 />
-                <BaseTextInputBox
-                    value={color}
-                    onChangeText={setColor}
-                    placeholder="Hexidecimal color code"
+                <BaseDropDownInput
+                    label="Color Group"
+                    selectedValue={color}
+                    onValueChange={handleColorChange}
+                    options={[
+                        ...colorGroups,
+                        {
+                            label: 'Create new color group',
+                            value: 'create_new'
+                        }]}
                 />
                 <BaseLargeTextInputBox
                     value={notes}
