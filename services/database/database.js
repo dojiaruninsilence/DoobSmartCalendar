@@ -1,6 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 
-const database_name = "doob_calendar_v_1_2.db";
+const database_name = "doob_calendar_v_1_3.db";
 let db;
 
 export const openDatabase = async () => {
@@ -63,6 +63,12 @@ export const openDatabase = async () => {
                 password_hash TEXT NOT NULL,
                 timezone INTEGER,
                 preference_flags INTEGER,
+                background_color TEXT,
+                primary_color TEXT,
+                secondary_color TEXT,
+                tertiary_color TEXT,
+                font TEXT,
+                font_size INTEGER,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             );

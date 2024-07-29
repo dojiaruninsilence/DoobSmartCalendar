@@ -16,6 +16,8 @@ import { ViewEventsPage } from './components/events/ViewEventPage';
 import { ViewEventDetailPage } from './components/events/ViewEventDetailPage';
 import { EditEventDetailPage } from './components/events/EditEventDetailPage';
 import { MainNavigation } from './components/navigation/MainNavigation';
+import { migrateDatabase } from './services/database/databaseMigration';
+import { deleteOldDatabase } from './services/database/deleteOldDatabase';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -31,6 +33,15 @@ export default function App() {
   useEffect(() => {
     requestPermissions();
   }, []);
+
+  (async () => {
+    try {
+      // await migrateDatabase();
+      // await deleteOldDatabase();
+    } catch (error) {
+      console.error(`Migration or deletion failed: ${error}`);
+    }
+  })();
   
   return <MainNavigation />; 
 }

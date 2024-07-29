@@ -11,6 +11,7 @@ import { CalendarMonthView } from "./CalendarMonthView";
 import { CalendarYearView } from "./CalenderYearView";
 import { getEventsForDate, getEventsForMonth, getEventsForThreeDay, getEventsForWeek } from "../../services/database/databaseEvents";
 import { getAllColorGroups } from "../../services/database/databaseColorGroups";
+import { BaseContainer } from "../containers/BaseContainer";
 
 export const CalendarViewPage = ({ navigation }) => {
     const [zoomLevel, setZoomLevel] = useState('day');
@@ -142,21 +143,23 @@ export const CalendarViewPage = ({ navigation }) => {
     
 
     return (
-        <PanGestureHandler onHandlerStateChange={handleGesture}>
-            <View style={styles.container}>
-                <View style={styles.controls}>
-                    <Button title="Half Day" onPress={() => setZoomLevel('halfDay')} />
-                    <Button title="Day" onPress={() => setZoomLevel('day')} />
-                    <Button title="3 Day" onPress={() => setZoomLevel('3Day')} />
-                    <Button title="Week" onPress={() => setZoomLevel('week')} />
-                    <Button title="Month" onPress={() => setZoomLevel('month')} />
-                    <Button title="Year" onPress={() => setZoomLevel('year')} />
+        <BaseContainer>
+            <PanGestureHandler onHandlerStateChange={handleGesture}>
+                <View style={styles.container}>
+                    <View style={styles.controls}>
+                        <Button title="Half Day" onPress={() => setZoomLevel('halfDay')} />
+                        <Button title="Day" onPress={() => setZoomLevel('day')} />
+                        <Button title="3 Day" onPress={() => setZoomLevel('3Day')} />
+                        <Button title="Week" onPress={() => setZoomLevel('week')} />
+                        <Button title="Month" onPress={() => setZoomLevel('month')} />
+                        <Button title="Year" onPress={() => setZoomLevel('year')} />
+                    </View>
+                    <View style={styles.calendar}>
+                        {renderCalendar()}
+                    </View>
                 </View>
-                <View style={styles.calendar}>
-                    {renderCalendar()}
-                </View>
-            </View>
-        </PanGestureHandler>
+            </PanGestureHandler>
+        </BaseContainer>
     )
 }
 
