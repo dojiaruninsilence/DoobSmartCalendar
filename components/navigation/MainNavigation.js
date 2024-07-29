@@ -8,6 +8,7 @@ import { AddUserPage } from '../users/AddUserPage';
 import { ViewUsersPage } from '../users/ViewUsersPage';
 import { ViewUserDetailPage } from '../users/ViewUserDetailPage';
 import { EditUserDetailPage } from '../users/EditUserDetailPage';
+import { UserLoginPage } from '../users/UserLoginPage';
 import { AddEventPage } from '../events/AddEventPage';
 import { EditEventDetailPage } from '../events/EditEventDetailPage';
 import { ViewEventsPage } from '../events/ViewEventPage';
@@ -75,6 +76,7 @@ export const MainNavigation = () => {
                 <Drawer.Screen name="ViewUsers" component={ViewUsersPage} />
                 <Drawer.Screen name="ViewUserDetail" component={ViewUserDetailPage} />
                 <Drawer.Screen name="EditUserDetail" component={EditUserDetailPage} />
+                <Drawer.Screen name="UserLogin" component={UserLoginPage} />
                 <Drawer.Screen name="AddEvent" component={AddEventPage} />
                 <Drawer.Screen name="ViewEvents" component={ViewEventsPage} />
                 <Drawer.Screen name="ViewEventDetail" component={ViewEventDetailPage} />

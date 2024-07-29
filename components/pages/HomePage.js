@@ -3,8 +3,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import { MenuItem } from "../navigation/MenuItem";
 import { BaseTextBox } from "../text/BaseTextBox";
 import { BaseContainer } from "../containers/BaseContainer";
+import { getCurrentUser } from "../../services/auth";
 
 export const HomePage = ({ navigation }) => {
+    // const user = getCurrentUser();
     return (
         <BaseContainer>
             <View style={styles.container}>
@@ -41,7 +43,10 @@ export const HomePage = ({ navigation }) => {
                 </View>            
                 <View style={styles.row}>
                     <MenuItem title="Calendar View" onPress={() => navigation.navigate('CalendarView')} />
-                </View>                
+                </View> 
+                <View style={styles.row}>
+                    <MenuItem title="User Login" onPress={() => navigation.navigate('UserLogin')} />
+                </View> 
             </View>
         </BaseContainer>
     )
