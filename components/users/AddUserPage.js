@@ -6,6 +6,7 @@ import { BaseContainer } from '../containers/BaseContainer';
 import { BaseTextBox } from '../text/BaseTextBox';
 import { BaseTextInputBox } from '../inputs/BaseTextInputBox';
 import { addUser } from '../../services/database/databaseUsers';
+import { TimezoneDropDownInput } from '../inputs/TimezoneDropdownInput';
 
 export const AddUserPage = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -61,10 +62,14 @@ export const AddUserPage = ({ navigation }) => {
                     onChangeText={setPasswordHash}
                     placeholder="Password"
                 />
-                <BaseTextInputBox
+                {/* <BaseTextInputBox
                     value={timezone}
                     onChangeText={setTimezone}
                     placeholder="Timezone"
+                /> */}
+                <TimezoneDropDownInput
+                    selectedTimezone={timezone}
+                    onTimezoneChange={(value) => setTimezone(value)}
                 />
                 <BaseTextInputBox
                     value={preferenceFlags}

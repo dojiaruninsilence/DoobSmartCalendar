@@ -13,6 +13,17 @@ export const HomePage = ({ navigation }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [currentTime, setCurrentTime] = useState(new Date());
     const [sortedEvents, setSortedEvents] = useState([]);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const currentUser = getCurrentUser();
+            setUser(currentUser || [{ username: 'defaultUser' }]);
+        };
+
+        fetchUser();
+        console.log(user[0].username);
+    }, []);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -49,6 +60,7 @@ export const HomePage = ({ navigation }) => {
             <ScrollView>
                 <View style={styles.container}>
                     <Text style={styles.header}>Doob Bloom Smarty Time</Text>
+                    <Text>Welcome {user[0].username}</Text>
                     <View style={styles.eventsContainer}>
                         {sortedEvents.map(event => renderEvent(event))}
 

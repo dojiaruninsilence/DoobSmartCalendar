@@ -5,7 +5,16 @@ import { getCurrentUser } from '../../services/auth';
 
 export const BaseContainer = ({ children }) => {
     const [backgroundColor, setBackgroundColor] = useState('#556B2F');
-    const user = getCurrentUser() || [{ username: 'defaultUser'}];
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const currentUser = getCurrentUser();
+            setUser(currentUser || [{ username: 'defaultUser' }]);
+        };
+
+        fetchUser();
+    }, []);
 
     useEffect(() => {
         const fetchUserBackgroundColor = async () => {
@@ -14,7 +23,7 @@ export const BaseContainer = ({ children }) => {
                     const users = await getUserByName(user[0].username);
                     if (users && users[0].background_color) {
                         setBackgroundColor(users[0].background_color);
-                        console.log(user[0].username);
+                        //console.log(user[0].username);
                     }
                 }
             } catch (error) {
@@ -23,8 +32,8 @@ export const BaseContainer = ({ children }) => {
         };
 
         fetchUserBackgroundColor();
-        console.log('bg fetched');
-    }, []);
+        //console.log('bg fetched');
+    }, [user]);
     return (
         <View style={[styles.container, { backgroundColor }]}>
             {children}
