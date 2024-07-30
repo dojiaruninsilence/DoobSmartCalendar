@@ -175,3 +175,34 @@ export const calculateEventLayoutMonthHour = (dayEvents, hour) => {
 
     return eventLayouts;
 };
+
+// new function for sorting and limiting events
+const compareEvents = (a, b) => {
+    // sort by priority (importance)
+    if (a.importance !== b.importance) {
+        return a.importance - b.importance;
+    }
+    // sort by date and time
+    if (a.start_date_year !== b.start_date_year) {
+        return a.start_date_year - b.start_date_year;
+    }
+    if (a.start_date_month !== b.start_date_month) {
+        return a.start_date_month - b.start_date_month;
+    }
+    if (a.start_date_day !== b.start_date_day) {
+        return a.start_date_day - b.start_date_day;
+    }
+    if (a.start_time_hour !== b.start_time_hour) {
+        return a.start_time_hour - b.start_time_hour;
+    }
+    if (a.start_time_minute !== b.start_time_minute) {
+        return a.start_time_minute - b.start_time_minute;
+    }
+    // sort alphabetically by title
+    return a.title.localeCompare(b.title);
+};
+
+export const sortAndLimitEvents = (events, limit) => {
+    const sortedEvents = [...events].sort(compareEvents);
+    return sortedEvents.slice(0, limit);
+};

@@ -131,6 +131,14 @@ export const CustomDrawerContent = (props) => {
                         <Text style={styles.itemText}>Calendar View</Text>
                     </TouchableOpacity>
                 </View>
+                <View style={styles.row}>
+                    <TouchableOpacity
+                        style={styles.itemContainer}
+                        onPress={() => props.navigation.navigate('UserLogin')}
+                    >
+                        <Text style={styles.itemText}>User Login</Text>
+                    </TouchableOpacity>
+                </View>
                 {/* Add more drawer items as needed */}
             </View>
         </DrawerContentScrollView>

@@ -1,16 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from 'react-native';
+import moment from "moment";
+
 import { MenuItem } from "../navigation/MenuItem";
 import { BaseTextBox } from "../text/BaseTextBox";
 import { BaseContainer } from "../containers/BaseContainer";
 import { getCurrentUser } from "../../services/auth";
+import { getEventsForDate } from "../../services/database/databaseEvents";
+import { sortAndLimitEvents } from "../../utils/calendarUtils/eventLayout";
 
 export const HomePage = ({ navigation }) => {
     // const user = getCurrentUser();
+    const [currentDate, setCurrentDate] = useState(new Date());
+    //const [events, setEvents] = useState([]); 
+    //const [nextEvents, setNextEvents] = useState([]);
+    const [sortedEvents, setSortedEvents] = useState([]);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            const dateStr = moment(currentDate).format('YYYY-MM-DD');
+            const nextDateStr = moment(currentDate).add(1, 'days').format('YYYY-MM-DD');
+            const fetchedEvents = await getEventsForDate(dateStr);
+            const fetchedNextEvents = await getEventsForDate(nextDateStr);
+
+            const sortEvents = sortAndLimitEvents(fetchedEvents, 3);
+            setSortedEvents(sortEvents);
+        };
+
+        fetchEvents();
+    }, [currentDate]);
+
+    const renderEvent = (event) => {
+        //console.log(event.title);
+
+        return (            
+            <Text key={event.id} style={styles.eventText}>{event.title}</Text> 
+        );
+    };
+
     return (
         <BaseContainer>
             <View style={styles.container}>
                 <Text style={styles.header}>Doob Bloom Smarty Time</Text>
+                <View style={styles.eventsContainer}>
+                    {sortedEvents.map(event => renderEvent(event))}
+
+                </View>
                 <View style={styles.row}>
                     <MenuItem title="Add User" onPress={() => navigation.navigate('AddUser')} />
                     <Text> | </Text>
@@ -69,5 +104,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '50%',
         marginLeft: '25%',
+    },
+    eventsContainer: {
+        width: '90%',
+        height: 100,
+    },
+    eventText: {
+        fontSize: 16,
+        marginVertical: 2,
     },
 });
