@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import moment from "moment";
 
 import { MenuItem } from "../navigation/MenuItem";
@@ -10,10 +10,8 @@ import { getEventsForDate } from "../../services/database/databaseEvents";
 import { sortAndLimitEvents } from "../../utils/calendarUtils/eventLayout";
 
 export const HomePage = ({ navigation }) => {
-    // const user = getCurrentUser();
     const [currentDate, setCurrentDate] = useState(new Date());
-    //const [events, setEvents] = useState([]); 
-    //const [nextEvents, setNextEvents] = useState([]);
+    const [currentTime, setCurrentTime] = useState(new Date());
     const [sortedEvents, setSortedEvents] = useState([]);
 
     useEffect(() => {
@@ -30,6 +28,14 @@ export const HomePage = ({ navigation }) => {
         fetchEvents();
     }, [currentDate]);
 
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
+
     const renderEvent = (event) => {
         //console.log(event.title);
 
@@ -40,49 +46,59 @@ export const HomePage = ({ navigation }) => {
 
     return (
         <BaseContainer>
-            <View style={styles.container}>
-                <Text style={styles.header}>Doob Bloom Smarty Time</Text>
-                <View style={styles.eventsContainer}>
-                    {sortedEvents.map(event => renderEvent(event))}
+            <ScrollView>
+                <View style={styles.container}>
+                    <Text style={styles.header}>Doob Bloom Smarty Time</Text>
+                    <View style={styles.eventsContainer}>
+                        {sortedEvents.map(event => renderEvent(event))}
 
+                    </View>
+                    <View style={styles.row}>
+                        <MenuItem title="Add User" onPress={() => navigation.navigate('AddUser')} />
+                        <Text> | </Text>
+                        <MenuItem title="View Users" onPress={() => navigation.navigate('ViewUsers')} />
+                    </View>
+                    <View style={styles.row}>
+                        <MenuItem title="Add Event" onPress={() => navigation.navigate('AddEvent')} />
+                        <Text> | </Text>
+                        <MenuItem title="View Events" onPress={() => navigation.navigate('ViewEvents')} />
+                    </View>            
+                    <View style={styles.row}>
+                        <MenuItem title="Add Random Reminder" onPress={() => navigation.navigate('AddRandomReminder')} />
+                        <Text> | </Text>
+                        <MenuItem title="View Random Reminders" onPress={() => navigation.navigate('ViewRandomReminders')} />
+                    </View>            
+                    <View style={styles.row}>
+                        <MenuItem title="Add Group" onPress={() => navigation.navigate('AddGroup')} />
+                        <Text> | </Text>
+                        <MenuItem title="View Groups" onPress={() => navigation.navigate('ViewGroups')} />
+                    </View>            
+                    <View style={styles.row}>
+                        <MenuItem title="Add Color Group" onPress={() => navigation.navigate('AddColorGroup')} />
+                        <Text> | </Text>
+                        <MenuItem title="View Color Groups" onPress={() => navigation.navigate('ViewColorGroups')} />
+                    </View>            
+                    <View style={styles.row}>
+                        <MenuItem title="Add User Group" onPress={() => navigation.navigate('AddUserGroup')} />
+                        <Text> | </Text>
+                        <MenuItem title="View User Groups" onPress={() => navigation.navigate('ViewUserGroups')} />
+                    </View>            
+                    <View style={styles.row}>
+                        <MenuItem title="Calendar View" onPress={() => navigation.navigate('CalendarView')} />
+                    </View> 
+                    <View style={styles.row}>
+                        <MenuItem title="User Login" onPress={() => navigation.navigate('UserLogin')} />
+                    </View> 
+                    <View style={styles.clockContainer}>
+                        <Text style={styles.clockText}>
+                            {moment(currentTime).format('HH:mm:ss')}
+                        </Text>
+                        <Text style={styles.dateText}>
+                            {moment(currentTime).format('MM/DD/YYYY')}
+                        </Text>
+                    </View>
                 </View>
-                <View style={styles.row}>
-                    <MenuItem title="Add User" onPress={() => navigation.navigate('AddUser')} />
-                    <Text> | </Text>
-                    <MenuItem title="View Users" onPress={() => navigation.navigate('ViewUsers')} />
-                </View>
-                <View style={styles.row}>
-                    <MenuItem title="Add Event" onPress={() => navigation.navigate('AddEvent')} />
-                    <Text> | </Text>
-                    <MenuItem title="View Events" onPress={() => navigation.navigate('ViewEvents')} />
-                </View>            
-                <View style={styles.row}>
-                    <MenuItem title="Add Random Reminder" onPress={() => navigation.navigate('AddRandomReminder')} />
-                    <Text> | </Text>
-                    <MenuItem title="View Random Reminders" onPress={() => navigation.navigate('ViewRandomReminders')} />
-                </View>            
-                <View style={styles.row}>
-                    <MenuItem title="Add Group" onPress={() => navigation.navigate('AddGroup')} />
-                    <Text> | </Text>
-                    <MenuItem title="View Groups" onPress={() => navigation.navigate('ViewGroups')} />
-                </View>            
-                <View style={styles.row}>
-                    <MenuItem title="Add Color Group" onPress={() => navigation.navigate('AddColorGroup')} />
-                    <Text> | </Text>
-                    <MenuItem title="View Color Groups" onPress={() => navigation.navigate('ViewColorGroups')} />
-                </View>            
-                <View style={styles.row}>
-                    <MenuItem title="Add User Group" onPress={() => navigation.navigate('AddUserGroup')} />
-                    <Text> | </Text>
-                    <MenuItem title="View User Groups" onPress={() => navigation.navigate('ViewUserGroups')} />
-                </View>            
-                <View style={styles.row}>
-                    <MenuItem title="Calendar View" onPress={() => navigation.navigate('CalendarView')} />
-                </View> 
-                <View style={styles.row}>
-                    <MenuItem title="User Login" onPress={() => navigation.navigate('UserLogin')} />
-                </View> 
-            </View>
+            </ScrollView>
         </BaseContainer>
     )
 };
@@ -112,5 +128,17 @@ const styles = StyleSheet.create({
     eventText: {
         fontSize: 16,
         marginVertical: 2,
+    },
+    clockContainer: {
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    clockText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+    },
+    dateText: {
+        fontSize: 18,
+        marginTop: 5,
     },
 });
