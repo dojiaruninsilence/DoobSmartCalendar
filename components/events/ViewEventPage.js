@@ -25,7 +25,7 @@ export const ViewEventsPage = ({ navigation }) => {
         };
 
         fetchEvents();
-    }, []);
+    }, [events]);
 
     const renderItem = ({ item }) => (
         <View style={styles.eventItem}>

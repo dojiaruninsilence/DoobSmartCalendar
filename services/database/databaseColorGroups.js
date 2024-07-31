@@ -65,6 +65,21 @@ export const getColorGroupById = async (id) => {
     }
 };
 
+export const getColorGroupByColor = async (color) => {
+    await ensureDBInitialized();
+
+    if (!db) {
+        return Promise.reject("Database is not initialized");
+    }
+
+    try {
+        const colorGroup = await db.getFirstAsync('SELECT * FROM ColorGroups WHERE hex_color = ?', color);
+        return colorGroup || null;
+    } catch (error) {
+        return Promise.reject(`Error fetching color group: ${error}`);
+    }
+}
+
 export const getAllColorGroups = async () => {
     await ensureDBInitialized();
     

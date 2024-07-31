@@ -14,7 +14,7 @@ export const BaseContainer = ({ children }) => {
         };
 
         fetchUser();
-    }, []);
+    }, [children]);
 
     useEffect(() => {
         const fetchUserBackgroundColor = async () => {

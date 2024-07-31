@@ -188,138 +188,140 @@ export const AddEventPage = ({ navigation, route }) => {
     }, [route.params?.newColorGroup]);
 
     return (
-        <View style={styles.container}>
-            <ScrollView>
-                <BaseTextBox>Add New Event</BaseTextBox>
+        <BaseContainer>
+            <View style={styles.container}>
+                <ScrollView>
+                    <BaseTextBox>Add New Event</BaseTextBox>
 
-                <BaseTextInputBox
-                    value={title}
-                    onChangeText={setTitle}
-                    placeholder="Title"
-                />
-                <BaseMidTextInputBox
-                    value={description}
-                    onChangeText={setDescription}
-                    placeholder="Description"
-                />
-                <DateTimeInput
-                    label="Start"
-                    month={startMonth}
-                    setMonth={setStartMonth}
-                    monthPlaceholder="MM"
-                    day={startDay}
-                    setDay={setStartDay}
-                    dayPlaceholder="DD"
-                    year={startYear}
-                    setYear={setStartYear}
-                    yearPlaceholder="YYYY"
-                    hour={startHour}
-                    setHour={setStartHour}
-                    hourPlaceholder="HH"
-                    minute={startMinute}
-                    setMinute={setStartMinute}
-                    minutePlaceholder="mm"
-                /> 
-                <DateTimeInput
-                    label="End"
-                    month={endMonth}
-                    setMonth={setEndMonth}
-                    monthPlaceholder="MM"
-                    day={endDay}
-                    setDay={setEndDay}
-                    dayPlaceholder="DD"
-                    year={endYear}
-                    setYear={setEndYear}
-                    yearPlaceholder="YYYY"
-                    hour={endHour}
-                    setHour={setEndHour}
-                    hourPlaceholder="HH"
-                    minute={endMinute}
-                    setMinute={setEndMinute}
-                    minutePlaceholder="mm"
-                />
-                <DateTimeInput
-                    label="Deadline"
-                    month={deadlineMonth}
-                    setMonth={setDeadlineMonth}
-                    monthPlaceholder="MM"
-                    day={deadlineDay}
-                    setDay={setDeadlineDay}
-                    dayPlaceholder="DD"
-                    year={deadlineYear}
-                    setYear={setDeadlineYear}
-                    yearPlaceholder="YYYY"
-                    hour={deadlineHour}
-                    setHour={setDeadlineHour}
-                    hourPlaceholder="HH"
-                    minute={deadlineMinute}
-                    setMinute={setDeadlineMinute}
-                    minutePlaceholder="mm"
-                />
-                <DurationInput
-                    label="Duration"
-                    day={durationDays}
-                    setDay={setDurationDays}
-                    dayPlaceholder="DD"
-                    hour={durationHours}
-                    setHour={setDurationHours}
-                    hourPlaceholder="HH"
-                    minute={durationMinutes}
-                    setMinute={setDurationMinutes}
-                    minutePlaceholder="mm"
-                />
-                <BaseTextInputBox
-                    value={importance}
-                    onChangeText={setImportance}
-                    placeholder="Importance (1-10)"
-                    keyboardType="numeric"
-                />
-                <BaseDropDownInput
-                    label="Color Group"
-                    selectedValue={color}
-                    onValueChange={handleColorChange}
-                    options={[
-                        ...colorGroups,
-                        {
-                            label: 'Create new color group',
-                            value: 'create_new'
-                        }]}
-                />
-                <BaseLargeTextInputBox
-                    value={notes}
-                    onChangeText={setNotes}
-                    placeholder="Notes"
-                />
-                <View style={styles.switchContainer}>
-                    <Text style={styles.label}>Is Repeating</Text>
-                    <Switch value={isRepeating} onValueChange={setIsRepeating} />
-                </View>
-                {isRepeating && (
                     <BaseTextInputBox
-                        value={numberRepeats}
-                        onChangeText={setNumberRepeats}
-                        placeholder="Number of times to repeat"
+                        value={title}
+                        onChangeText={setTitle}
+                        placeholder="Title"
+                    />
+                    <BaseMidTextInputBox
+                        value={description}
+                        onChangeText={setDescription}
+                        placeholder="Description"
+                    />
+                    <DateTimeInput
+                        label="Start"
+                        month={startMonth}
+                        setMonth={setStartMonth}
+                        monthPlaceholder="MM"
+                        day={startDay}
+                        setDay={setStartDay}
+                        dayPlaceholder="DD"
+                        year={startYear}
+                        setYear={setStartYear}
+                        yearPlaceholder="YYYY"
+                        hour={startHour}
+                        setHour={setStartHour}
+                        hourPlaceholder="HH"
+                        minute={startMinute}
+                        setMinute={setStartMinute}
+                        minutePlaceholder="mm"
+                    /> 
+                    <DateTimeInput
+                        label="End"
+                        month={endMonth}
+                        setMonth={setEndMonth}
+                        monthPlaceholder="MM"
+                        day={endDay}
+                        setDay={setEndDay}
+                        dayPlaceholder="DD"
+                        year={endYear}
+                        setYear={setEndYear}
+                        yearPlaceholder="YYYY"
+                        hour={endHour}
+                        setHour={setEndHour}
+                        hourPlaceholder="HH"
+                        minute={endMinute}
+                        setMinute={setEndMinute}
+                        minutePlaceholder="mm"
+                    />
+                    <DateTimeInput
+                        label="Deadline"
+                        month={deadlineMonth}
+                        setMonth={setDeadlineMonth}
+                        monthPlaceholder="MM"
+                        day={deadlineDay}
+                        setDay={setDeadlineDay}
+                        dayPlaceholder="DD"
+                        year={deadlineYear}
+                        setYear={setDeadlineYear}
+                        yearPlaceholder="YYYY"
+                        hour={deadlineHour}
+                        setHour={setDeadlineHour}
+                        hourPlaceholder="HH"
+                        minute={deadlineMinute}
+                        setMinute={setDeadlineMinute}
+                        minutePlaceholder="mm"
+                    />
+                    <DurationInput
+                        label="Duration"
+                        day={durationDays}
+                        setDay={setDurationDays}
+                        dayPlaceholder="DD"
+                        hour={durationHours}
+                        setHour={setDurationHours}
+                        hourPlaceholder="HH"
+                        minute={durationMinutes}
+                        setMinute={setDurationMinutes}
+                        minutePlaceholder="mm"
+                    />
+                    <BaseTextInputBox
+                        value={importance}
+                        onChangeText={setImportance}
+                        placeholder="Importance (1-10)"
                         keyboardType="numeric"
                     />
-                )}
-                <View style={styles.switchContainer}>
-                    <Text style={styles.label}>Is Main Event:</Text>
-                    <Switch value={isMainEvent} onValueChange={setIsMainEvent} />
-                </View>
-                <View style={styles.switchContainer}>
-                    <Text style={styles.label}>Is Sub Event:</Text>
-                    <Switch value={isSubEvent} onValueChange={setIsSubEvent} />
-                </View>
-                {isSubEvent && (
-                    <BaseTextInputBox value={mainEvent} onChangeText={setMainEvent} placeholder="Main Event Title" />
-                )}
-                <BaseButton title="Add Event" onPress={handleAddEvent} />
-                <BaseButton title="View Events" onPress={() => {
-                    console.log('Button Pressed');
-                    navigation.navigate('ViewEvents');
-                }} />
-            </ScrollView>
-        </View>
+                    <BaseDropDownInput
+                        label="Color Group"
+                        selectedValue={color}
+                        onValueChange={handleColorChange}
+                        options={[
+                            ...colorGroups,
+                            {
+                                label: 'Create new color group',
+                                value: 'create_new'
+                            }]}
+                    />
+                    <BaseLargeTextInputBox
+                        value={notes}
+                        onChangeText={setNotes}
+                        placeholder="Notes"
+                    />
+                    <View style={styles.switchContainer}>
+                        <Text style={styles.label}>Is Repeating</Text>
+                        <Switch value={isRepeating} onValueChange={setIsRepeating} />
+                    </View>
+                    {isRepeating && (
+                        <BaseTextInputBox
+                            value={numberRepeats}
+                            onChangeText={setNumberRepeats}
+                            placeholder="Number of times to repeat"
+                            keyboardType="numeric"
+                        />
+                    )}
+                    <View style={styles.switchContainer}>
+                        <Text style={styles.label}>Is Main Event:</Text>
+                        <Switch value={isMainEvent} onValueChange={setIsMainEvent} />
+                    </View>
+                    <View style={styles.switchContainer}>
+                        <Text style={styles.label}>Is Sub Event:</Text>
+                        <Switch value={isSubEvent} onValueChange={setIsSubEvent} />
+                    </View>
+                    {isSubEvent && (
+                        <BaseTextInputBox value={mainEvent} onChangeText={setMainEvent} placeholder="Main Event Title" />
+                    )}
+                    <BaseButton title="Add Event" onPress={handleAddEvent} />
+                    <BaseButton title="View Events" onPress={() => {
+                        console.log('Button Pressed');
+                        navigation.navigate('ViewEvents');
+                    }} />
+                </ScrollView>
+            </View>
+        </BaseContainer>
     );
 };
 
