@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
-import { calculateEventLayoutMonthDay, calculateEventLayoutMonthHour } from '../../utils/calendarUtils/eventLayout';
+import { calculateEventLayoutMonthDay, calculateEventLayoutMonthHour, sortAndLimitEvents } from '../../utils/calendarUtils/eventLayout';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export const CalendarMonthView = ({ currentDate, events, colorGroups, onDayClick, navigation }) => {
@@ -12,6 +12,8 @@ export const CalendarMonthView = ({ currentDate, events, colorGroups, onDayClick
     const days = Array.from({ length: daysInMonth }, (_, i) =>
         startOfMonth.clone().add(i, 'days')
     );
+
+    const sortedEvents = sortAndLimitEvents(events, 5);
 
     for (let i = 0; i < startDayOfMonth; i++) {
         days.unshift(null);
@@ -38,6 +40,14 @@ export const CalendarMonthView = ({ currentDate, events, colorGroups, onDayClick
                     { backgroundColor: event.color, opacity: 0.3 }
                 ]}
             />
+        );
+    };
+
+    const renderEvent = (event) => {
+        console.log("Rendering Event:", event);
+
+        return (            
+            <Text key={event.id} style={styles.importantEventText}>{event.title}</Text> 
         );
     };
 
@@ -100,6 +110,10 @@ export const CalendarMonthView = ({ currentDate, events, colorGroups, onDayClick
                     </View>
                 ))}
             </View>
+            <View style={styles.importantEventsContainer}>
+                <Text>Important Events:</Text>
+                {sortedEvents.map(event => renderEvent(event))}
+            </View>
         </ScrollView>
     );
 };
@@ -110,7 +124,7 @@ const styles = StyleSheet.create({
     },
     monthContainer: {
         width: '90%',
-        height: '80%',
+        height: '30%',
     },
     monthYearText: {
         fontSize: 20,
@@ -170,7 +184,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginTop: 10,
         width: '100%',
-        height: 800, // need to fix this look at week
+        height: 200, // need to fix this look at week
     },
     colorGroup: {
         flexDirection: 'row',
@@ -189,5 +203,16 @@ const styles = StyleSheet.create({
     },
     colorDescription: {
         fontStyle: 'italic',
+    },
+    importantEventsContainer: {
+        width: '90%',
+        height: 100,
+        backgroundColor: '#f0f0f0', // Add a background color to debug
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    importantEventText: {
+        fontSize: 16,
+        marginVertical: 2,
     },
 });

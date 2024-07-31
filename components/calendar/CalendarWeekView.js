@@ -1,11 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
-import { calculateEventLayoutWeek } from '../../utils/calendarUtils/eventLayout';
+import { calculateEventLayoutWeek, sortAndLimitEvents } from '../../utils/calendarUtils/eventLayout';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export const CalendarWeekView = ({ currentDate, events, colorGroups, onDayClick, navigation }) => {
     const startOfWeek = moment(currentDate).startOf('week');
+
+    const sortedEvents = sortAndLimitEvents(events, 5);
+
+    console.log("All Events:", events);
+    console.log("Sorted Events:", sortedEvents);
 
     if (!startOfWeek.isValid()) {
         console.warn('Invalid startOfWeek date');
@@ -32,6 +37,14 @@ export const CalendarWeekView = ({ currentDate, events, colorGroups, onDayClick,
                 onPress={() => navigation.navigate('ViewEventDetail', { eventId: event.id })}            
             >
             </TouchableOpacity>
+        );
+    };
+
+    const renderEvent = (event) => {
+        console.log("Rendering Event:", event);
+
+        return (            
+            <Text key={event.id} style={styles.importantEventText}>{event.title}</Text> 
         );
     };
 
@@ -79,6 +92,11 @@ export const CalendarWeekView = ({ currentDate, events, colorGroups, onDayClick,
                         <Text style={styles.colorDescription}>{group.description}</Text>
                     </View>
                 ))}
+            </View>
+            <Text>here</Text>
+            <View style={styles.importantEventsContainer}>
+                <Text>Important Events:</Text>
+                {sortedEvents.map(event => renderEvent(event))}
             </View>
         </ScrollView>
     );
@@ -133,8 +151,7 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
         //alignItems: 'center',
         marginTop: 10,
-        width: '100%',
-        height: 800, // need to make this automatic dont know why it isnt adjusting height as items added
+        width: '100%', // need to make this automatic dont know why it isnt adjusting height as items added
     },
     colorGroup: {
         flexDirection: 'row',
@@ -153,5 +170,16 @@ const styles = StyleSheet.create({
     },
     colorDescription: {
         fontStyle: 'italic',
+    },
+    importantEventsContainer: {
+        width: '90%',
+        height: 100,
+        backgroundColor: '#f0f0f0', // Add a background color to debug
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    importantEventText: {
+        fontSize: 16,
+        marginVertical: 2,
     },
 });

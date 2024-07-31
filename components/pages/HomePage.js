@@ -13,7 +13,7 @@ export const HomePage = ({ navigation }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [currentTime, setCurrentTime] = useState(new Date());
     const [sortedEvents, setSortedEvents] = useState([]);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState([{ username: 'defaultUser' }]);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -22,7 +22,7 @@ export const HomePage = ({ navigation }) => {
         };
 
         fetchUser();
-        console.log(user[0].username);
+        console.log(user[0]?.username);
     }, []);
 
     useEffect(() => {
@@ -63,7 +63,6 @@ export const HomePage = ({ navigation }) => {
                     <Text>Welcome {user[0].username}</Text>
                     <View style={styles.eventsContainer}>
                         {sortedEvents.map(event => renderEvent(event))}
-
                     </View>
                     <View style={styles.row}>
                         <MenuItem title="Add User" onPress={() => navigation.navigate('AddUser')} />

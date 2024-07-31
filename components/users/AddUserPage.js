@@ -6,7 +6,7 @@ import { BaseContainer } from '../containers/BaseContainer';
 import { BaseTextBox } from '../text/BaseTextBox';
 import { BaseTextInputBox } from '../inputs/BaseTextInputBox';
 import { addUser } from '../../services/database/databaseUsers';
-import { TimezoneDropDownInput } from '../inputs/TimezoneDropdownInput';
+import { TimezoneDropDownInput } from '../inputs/TimezoneDropDownInput';
 
 export const AddUserPage = ({ navigation }) => {
     const [username, setUsername] = useState('');
