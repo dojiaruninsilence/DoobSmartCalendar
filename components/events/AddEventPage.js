@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Alert, ScrollView, Switch, StyleSheet, Button } from 'react-native';
 import { useAssets } from 'expo-asset';
 import { Audio } from 'expo-av';
+import * as TaskManager from 'expo-task-manager';
 
 import { BaseButton } from '../buttons/BaseButton';
 import { BaseContainer } from '../containers/BaseContainer';
@@ -15,7 +16,7 @@ import { DateTimeInput } from '../inputs/DateTimeInput';
 import { DurationInput } from '../inputs/DurationInput';
 import { BaseLargeTextInputBox } from '../inputs/BaseLargeTextInputBox';
 import { BaseMidTextInputBox } from '../inputs/BaseMidTextInputBox';
-import { scheduleNotification } from '../../services/notifications/notifications';
+import { ALARM_TASK_NAME, scheduleAlarm, scheduleNotification } from '../../services/notifications/notifications';
 import { BaseDropDownInput } from '../inputs/BaseDropDownInput';
 
 export const AddEventPage = ({ navigation, route }) => {
@@ -55,6 +56,8 @@ export const AddEventPage = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
 
     const [assets, error] = useAssets([require('../../assets/sounds/battle_ram_001.mp3')]);
+
+    const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
     useEffect(() => {
         if (assets) {
@@ -117,8 +120,14 @@ export const AddEventPage = ({ navigation, route }) => {
 
         try {
             await addEvent(event);
-            if (soundUri) {
-                await scheduleNotification(event, soundUri);
+            if (notificationsEnabled && soundUri) {
+                // await TaskManager.isTaskRegisteredAsync(ALARM_TASK_NAME).then(async (isRegistered) => {
+                //     if (!isRegistered) {
+                //         await TaskManager.defineTask(ALARM_TASK_NAME, { event });
+                //     }
+                // });
+
+                await scheduleAlarm(event, soundUri);
             }
             
             Alert.alert("Success", "Event added successfully");
@@ -291,6 +300,10 @@ export const AddEventPage = ({ navigation, route }) => {
                         onChangeText={setNotes}
                         placeholder="Notes"
                     />
+                    <View style={styles.switchContainer}>
+                        <Text style={styles.label}>Enable Notifications</Text>
+                        <Switch value={notificationsEnabled} onValueChange={setNotificationsEnabled} />
+                    </View>
                     <View style={styles.switchContainer}>
                         <Text style={styles.label}>Is Repeating</Text>
                         <Switch value={isRepeating} onValueChange={setIsRepeating} />

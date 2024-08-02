@@ -78,7 +78,7 @@ export const getColorGroupByColor = async (color) => {
     } catch (error) {
         return Promise.reject(`Error fetching color group: ${error}`);
     }
-}
+};
 
 export const getAllColorGroups = async () => {
     await ensureDBInitialized();
